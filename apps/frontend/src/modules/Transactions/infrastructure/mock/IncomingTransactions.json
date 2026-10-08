@@ -1,0 +1,2705 @@
+{
+  "total_transactions": 100,
+  "transactions": [
+    {
+      "date": "2026/01/30 12:42:58",
+      "merchant": {
+        "name": "Development Work UG",
+        "email": null
+      },
+      "amount": {
+        "full": "UGX 2,246",
+        "currency": "UGX",
+        "value": "2246",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "INVALID",
+        "type": "failed"
+      },
+      "customer": {
+        "name": "NA rownee2001@gmail.com",
+        "email": "rownee2001@gmail.com",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "697c7d216987f8740b1475b1",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/0?trackingId=a48c03ad-a055-449f-b9c6-daca183c5bf9",
+      "device_fingerprint": "r7uh6DSESgOq1vM7L6Ez"
+    },
+    {
+      "date": "2026/01/30 12:24:58",
+      "merchant": {
+        "name": "Development Work UG",
+        "email": null
+      },
+      "amount": {
+        "full": "UGX 4,500",
+        "currency": "UGX",
+        "value": "4500",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "INVALID",
+        "type": "failed"
+      },
+      "customer": {
+        "name": "Justice                         Amankwah",
+        "email": "asedjoah@remail.com",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "ADM-2025-C795E35C-1769765098",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/0?trackingId=82d636e8-8067-4e81-b185-daca1a66201c",
+      "device_fingerprint": "zmsTYQi5IwsG4wRyERe6"
+    },
+    {
+      "date": "2026/01/30 12:20:47",
+      "merchant": {
+        "name": "Development Work RW",
+        "email": null
+      },
+      "amount": {
+        "full": "RWF 1",
+        "currency": "RWF",
+        "value": "1",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "INVALID",
+        "type": "failed"
+      },
+      "customer": {
+        "name": "Customer                         User",
+        "email": "customer@ogera.com",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "OGERA-1769764843550-83ad6c91-7",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/0?trackingId=60205ebc-a2b9-4cd3-b456-daca408ea763",
+      "device_fingerprint": "gS2GjBH17ONBth6flLOV"
+    },
+    {
+      "date": "2026/01/30 12:20:35",
+      "merchant": {
+        "name": "Development Work UG",
+        "email": null
+      },
+      "amount": {
+        "full": "UGX 5,000",
+        "currency": "UGX",
+        "value": "5000",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "INVALID",
+        "type": "failed"
+      },
+      "customer": {
+        "name": "Gideonn                         Nobbs",
+        "email": "gideonnobbs@gmail.com",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "ADM-2026-989C55BA-1769764834",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/0?trackingId=d630d0c3-4ffa-4e35-b4e5-dacaca254687",
+      "device_fingerprint": "nDSTeVLvYR7oKiK2sbZW"
+    },
+    {
+      "date": "2026/01/30 12:18:51",
+      "merchant": {
+        "name": "Development Work RW",
+        "email": null
+      },
+      "amount": {
+        "full": "USD 0.01",
+        "currency": "USD",
+        "value": "0.01",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "INVALID",
+        "type": "failed"
+      },
+      "customer": {
+        "name": "Customer                         User",
+        "email": "customer@ogera.com",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "OGERA-1769764728030-83ad6c91-7",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/0?trackingId=0f3091b7-09a7-4d18-8fde-daca007244c2",
+      "device_fingerprint": "rP37XH37z0HUxxx10jgB"
+    },
+    {
+      "date": "2026/01/30 12:15:11",
+      "merchant": {
+        "name": "Development Work UG",
+        "email": null
+      },
+      "amount": {
+        "full": "UGX 18,000Card",
+        "currency": "UGX",
+        "value": "18000",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "Failed",
+        "type": "success"
+      },
+      "customer": {
+        "name": "Minori                         Itabashi",
+        "email": "harvest0725@gmail.com",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "ORDER-1769764510203-qxhpx3",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/104137?trackingId=8fdd641b-e3e7-402e-9317-daca803c12d6",
+      "device_fingerprint": "FFA1auh761Ln8ic0boOS"
+    },
+    {
+      "date": "2026/01/30 12:12:24",
+      "merchant": {
+        "name": "Development Work UG",
+        "email": null
+      },
+      "amount": {
+        "full": "UGX 2,246Card",
+        "currency": "UGX",
+        "value": "2246",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "Completed",
+        "type": "success"
+      },
+      "customer": {
+        "name": "NA rownee2001@gmail.com",
+        "email": "rownee2001@gmail.com",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "697c75f76d3c0498131907f3",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/104136?trackingId=2639889a-efff-42b3-b17e-daca4cdfd568",
+      "device_fingerprint": "y3GrGFY3SazvbQbd0R9H"
+    },
+    {
+      "date": "2026/01/30 12:11:53",
+      "merchant": {
+        "name": "Development Work UG",
+        "email": null
+      },
+      "amount": {
+        "full": "UGX 2,246",
+        "currency": "UGX",
+        "value": "2246",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "INVALID",
+        "type": "failed"
+      },
+      "customer": {
+        "name": "NA rownee2001@gmail.com",
+        "email": "rownee2001@gmail.com",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "697c75d96d3c0498131907e6",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/0?trackingId=15e5aead-2520-40a2-8658-dacab00b7e33",
+      "device_fingerprint": "N11PTv2J3KASOT6OjJk3"
+    },
+    {
+      "date": "2026/01/30 12:10:44",
+      "merchant": {
+        "name": "Development Work RW",
+        "email": null
+      },
+      "amount": {
+        "full": "USD 0.01",
+        "currency": "USD",
+        "value": "0.01",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "INVALID",
+        "type": "failed"
+      },
+      "customer": {
+        "name": "Customer                         User",
+        "email": "customer@ogera.com",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "OGERA-1769764240392-83ad6c91-7",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/0?trackingId=8e72b48e-7453-423a-a86e-daca0cc74335",
+      "device_fingerprint": "1pJ1dRtddBPmz0aA1q3d"
+    },
+    {
+      "date": "2026/01/30 12:10:35",
+      "merchant": {
+        "name": "Development Work RW",
+        "email": null
+      },
+      "amount": {
+        "full": "USD 0.01",
+        "currency": "USD",
+        "value": "0.01",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "INVALID",
+        "type": "failed"
+      },
+      "customer": {
+        "name": "Customer                         User",
+        "email": "customer@ogera.com",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "OGERA-1769764231724-83ad6c91-7",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/0?trackingId=68086524-faf7-4aaa-9e9e-daca7ff83459",
+      "device_fingerprint": "ZAdn45wrrjUVHReIQbXO"
+    },
+    {
+      "date": "2026/01/30 12:08:58",
+      "merchant": {
+        "name": "Development Work UG",
+        "email": null
+      },
+      "amount": {
+        "full": "UGX 2,246Card",
+        "currency": "UGX",
+        "value": "2246",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "Failed",
+        "type": "success"
+      },
+      "customer": {
+        "name": "NA rownee2001@gmail.com",
+        "email": "rownee2001@gmail.com",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "697c75296d3c0498131907d9",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/104135?trackingId=9289c195-f757-4433-bfc5-dacabfe0780f",
+      "device_fingerprint": "WYXh1UxlHeB05pmb9sP3"
+    },
+    {
+      "date": "2026/01/30 12:05:21",
+      "merchant": {
+        "name": "Development Work RW",
+        "email": null
+      },
+      "amount": {
+        "full": "USD 0.01",
+        "currency": "USD",
+        "value": "0.01",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "INVALID",
+        "type": "failed"
+      },
+      "customer": {
+        "name": "Customer                         User",
+        "email": "customer@ogera.com",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "OGERA-1769763916062-83ad6c91-7",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/0?trackingId=3f2a259b-8e1e-4235-94e8-daca92de4b9a",
+      "device_fingerprint": "2HD3pn3arpm2oJLjOUjj"
+    },
+    {
+      "date": "2026/01/30 11:58:27",
+      "merchant": {
+        "name": "Development Work UG",
+        "email": null
+      },
+      "amount": {
+        "full": "UGX 150,000Card",
+        "currency": "UGX",
+        "value": "150000",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "Completed",
+        "type": "success"
+      },
+      "customer": {
+        "name": "Robert                         Kabushenga",
+        "email": "lorisperutha@gmail.com",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "BOOKING-1769763504826",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/104134?trackingId=15b47cdd-1da1-498a-98f4-dacaf2788891",
+      "device_fingerprint": "M6eauyfHdSpRDX6KDL1V"
+    },
+    {
+      "date": "2026/01/30 11:57:59",
+      "merchant": {
+        "name": "Development Work UG",
+        "email": null
+      },
+      "amount": {
+        "full": "UGX 150,000",
+        "currency": "UGX",
+        "value": "150000",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "INVALID",
+        "type": "failed"
+      },
+      "customer": {
+        "name": "Robert                         Kabushenga",
+        "email": "lorisperutha@gmail.com",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "BOOKING-1769763474985",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/0?trackingId=dfc351aa-8967-4f81-b893-daca8f3e7677",
+      "device_fingerprint": "0W9ujGVxmo9siWuBttTC"
+    },
+    {
+      "date": "2026/01/30 11:55:01",
+      "merchant": {
+        "name": "Development Work ZW",
+        "email": null
+      },
+      "amount": {
+        "full": "USD 81.17",
+        "currency": "USD",
+        "value": "81.17",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "INVALID",
+        "type": "failed"
+      },
+      "customer": {
+        "name": "BAMBURI                         CEMENT",
+        "email": null,
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "1769763300_acbe97168a3cc34f68e72e533ffa395a",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/0?trackingId=39f5bec3-b6dc-4c0a-a736-daca0f12d35a",
+      "device_fingerprint": "bIveWfILGnehThXNsr02"
+    },
+    {
+      "date": "2026/01/30 11:54:40",
+      "merchant": {
+        "name": "Development Work ZW",
+        "email": null
+      },
+      "amount": {
+        "full": "USD 81.17",
+        "currency": "USD",
+        "value": "81.17",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "INVALID",
+        "type": "failed"
+      },
+      "customer": {
+        "name": "BAMBURI                         CEMENT",
+        "email": null,
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "1769763278_acbe97168a3cc34f68e72e533ffa395a",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/0?trackingId=067b52e5-867e-4543-b210-dacadf0d9838",
+      "device_fingerprint": "wXwM6keDLFJBkccwa4sP"
+    },
+    {
+      "date": "2026/01/30 11:53:25",
+      "merchant": {
+        "name": "Development Work RW",
+        "email": null
+      },
+      "amount": {
+        "full": "USD 0.01",
+        "currency": "USD",
+        "value": "0.01",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "INVALID",
+        "type": "failed"
+      },
+      "customer": {
+        "name": "Customer                         User",
+        "email": "customer@ogera.com",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "OGERA-1769763201094-83ad6c91-7",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/0?trackingId=e496c251-5575-4839-927e-daca0894d6ca",
+      "device_fingerprint": "nyDflOxjQQtzpGK7Pm1o"
+    },
+    {
+      "date": "2026/01/30 11:45:17",
+      "merchant": {
+        "name": "Development Work RW",
+        "email": null
+      },
+      "amount": {
+        "full": "USD 0.01",
+        "currency": "USD",
+        "value": "0.01",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "INVALID",
+        "type": "failed"
+      },
+      "customer": {
+        "name": "Customer                         User",
+        "email": "customer@ogera.com",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "OGERA-1769762712677-83ad6c91-7",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/0?trackingId=c7e95117-f058-4942-8fdd-dacade835c08",
+      "device_fingerprint": "zh4oa7WsgAGcRzTunzYl"
+    },
+    {
+      "date": "2026/01/30 11:44:39",
+      "merchant": {
+        "name": "Development Work-KE",
+        "email": null
+      },
+      "amount": {
+        "full": "USD 3",
+        "currency": "USD",
+        "value": "3",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "INVALID",
+        "type": "failed"
+      },
+      "customer": {
+        "name": "Kioko                         Immanuel",
+        "email": "kiokoimmanuel028@gmail.com",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "EK-1-1M-1769762679",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/0?trackingId=20f9f35e-0579-4fdd-a325-daca7813a4eb",
+      "device_fingerprint": "BNmchkGYENXmmwmFlTQ0"
+    },
+    {
+      "date": "2026/01/30 11:40:08",
+      "merchant": {
+        "name": "Development Work RW",
+        "email": null
+      },
+      "amount": {
+        "full": "USD 0.01",
+        "currency": "USD",
+        "value": "0.01",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "INVALID",
+        "type": "failed"
+      },
+      "customer": {
+        "name": "Customer                         User",
+        "email": "customer@ogera.com",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "OGERA-1769762405226-83ad6c91-7",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/0?trackingId=7ec038a2-1b7b-4226-aec7-dacaa49dc9e7",
+      "device_fingerprint": "F7frRndHHHJBYuF1ypU8"
+    },
+    {
+      "date": "2026/01/30 11:38:35",
+      "merchant": {
+        "name": "Development Work RW",
+        "email": null
+      },
+      "amount": {
+        "full": "USD 0.01",
+        "currency": "USD",
+        "value": "0.01",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "INVALID",
+        "type": "failed"
+      },
+      "customer": {
+        "name": "Customer                         User",
+        "email": "customer@ogera.com",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "OGERA-1769762311753-83ad6c91-7",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/0?trackingId=a5d8a434-1a1b-4cfd-83ca-daca8e206af1",
+      "device_fingerprint": "xDzH2cCeEsWJekwQzjDq"
+    },
+    {
+      "date": "2026/01/30 11:38:19",
+      "merchant": {
+        "name": "Development Work UG",
+        "email": null
+      },
+      "amount": {
+        "full": "UGX 60,000Card",
+        "currency": "UGX",
+        "value": "60000",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "Completed",
+        "type": "success"
+      },
+      "customer": {
+        "name": "NA customer@example.com",
+        "email": "customer@example.com",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "697c6dfaa48a78de53af54d1",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/104133?trackingId=f541013f-81ce-4bc9-a993-daca0e1c6ab1",
+      "device_fingerprint": "ly8M8p93bAE6YN71IgHW"
+    },
+    {
+      "date": "2026/01/30 11:30:13",
+      "merchant": {
+        "name": "Development Work RW",
+        "email": null
+      },
+      "amount": {
+        "full": "USD 0.15",
+        "currency": "USD",
+        "value": "0.15",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "INVALID",
+        "type": "failed"
+      },
+      "customer": {
+        "name": "Customer                         User",
+        "email": "customer@ogera.com",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "OGERA-1769761810077-83ad6c91-7",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/0?trackingId=860bc0e9-8015-4fb1-8c25-daca6da50efa",
+      "device_fingerprint": "ZsbUjiJO4zQ92y0fRu16"
+    },
+    {
+      "date": "2026/01/30 11:29:44",
+      "merchant": {
+        "name": "Development Work-KE",
+        "email": null
+      },
+      "amount": {
+        "full": "KES 9,580MpesaKE",
+        "currency": "KES",
+        "value": "9580",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "Failed",
+        "type": "success"
+      },
+      "customer": {
+        "name": "Sharon                         Makena",
+        "email": "okowamakena@gmail.com",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "1056521",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/104132?trackingId=002c9709-4f3c-4954-9f0a-daca1a6aaac5",
+      "device_fingerprint": "XjjzTC7EQC3GTOTDiWD2"
+    },
+    {
+      "date": "2026/01/30 11:29:42",
+      "merchant": {
+        "name": "Development Work RW",
+        "email": null
+      },
+      "amount": {
+        "full": "USD 0.15",
+        "currency": "USD",
+        "value": "0.15",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "INVALID",
+        "type": "failed"
+      },
+      "customer": {
+        "name": "Customer                         User",
+        "email": "customer@ogera.com",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "OGERA-1769761778951-83ad6c91-7",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/0?trackingId=2adf4be6-7945-4979-8033-daca9d9d828e",
+      "device_fingerprint": "r7LNSXMbwzl62ohgg7fl"
+    },
+    {
+      "date": "2026/01/30 11:28:50",
+      "merchant": {
+        "name": "Development Work-KE",
+        "email": null
+      },
+      "amount": {
+        "full": "KES 2",
+        "currency": "KES",
+        "value": "2",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "INVALID",
+        "type": "failed"
+      },
+      "customer": {
+        "name": "Alice                         Githui",
+        "email": null,
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "VAA_ORD_WG9JFL",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/0?trackingId=2929e56f-4228-4712-ba1f-daca83f727f1",
+      "device_fingerprint": "ZmwlBx6vvpTR7iHRGGRr"
+    },
+    {
+      "date": "2026/01/30 11:28:49",
+      "merchant": {
+        "name": "Development Work-KE",
+        "email": null
+      },
+      "amount": {
+        "full": "KES 2",
+        "currency": "KES",
+        "value": "2",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "INVALID",
+        "type": "failed"
+      },
+      "customer": {
+        "name": "Alice                         Githui",
+        "email": null,
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "VAA_ORD_GYYHXK",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/0?trackingId=a4208dc7-b55b-42c1-ada8-daca9d905655",
+      "device_fingerprint": "L7caBHiQc0tgPWCyOOPe"
+    },
+    {
+      "date": "2026/01/30 11:28:16",
+      "merchant": {
+        "name": "Development Work RW",
+        "email": null
+      },
+      "amount": {
+        "full": "USD 0.15",
+        "currency": "USD",
+        "value": "0.15",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "INVALID",
+        "type": "failed"
+      },
+      "customer": {
+        "name": "Customer                         User",
+        "email": "customer@ogera.com",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "OGERA-1769761693182-83ad6c91-7",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/0?trackingId=29928933-f66f-4a38-8a94-daca53eecc88",
+      "device_fingerprint": "e83QfGjZUNLQnPEg5ObK"
+    },
+    {
+      "date": "2026/01/30 11:27:48",
+      "merchant": {
+        "name": "Development Work RW",
+        "email": null
+      },
+      "amount": {
+        "full": "USD 0.77",
+        "currency": "USD",
+        "value": "0.77",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "INVALID",
+        "type": "failed"
+      },
+      "customer": {
+        "name": "Customer                         User",
+        "email": "customer@ogera.com",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "OGERA-1769761654048-83ad6c91-7",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/0?trackingId=d0f4a809-7452-437c-8273-dacaf71b0607",
+      "device_fingerprint": "ywcyOQw9LgcuunKADypW"
+    },
+    {
+      "date": "2026/01/30 11:23:28",
+      "merchant": {
+        "name": "Development Work RW",
+        "email": null
+      },
+      "amount": {
+        "full": "USD 0.77",
+        "currency": "USD",
+        "value": "0.77",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "INVALID",
+        "type": "failed"
+      },
+      "customer": {
+        "name": "Customer                         User",
+        "email": "customer@ogera.com",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "OGERA-1769761405183-83ad6c91-7",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/0?trackingId=7f7c1570-4879-46c7-9923-daca1074d17f",
+      "device_fingerprint": "4bnjghB8hoIGVIh7rYp4"
+    },
+    {
+      "date": "2026/01/30 11:22:54",
+      "merchant": {
+        "name": "Masai 2",
+        "email": null
+      },
+      "amount": {
+        "full": "KES 4Card",
+        "currency": "KES",
+        "value": "4",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "Completed",
+        "type": "success"
+      },
+      "customer": {
+        "name": "Fredrick                         Mwangima",
+        "email": "fredm@pesapal.com",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "RDT:1769761374.68879",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/104131?trackingId=2974bd87-bcf3-4a76-9534-dacab06c7ace",
+      "device_fingerprint": "g1RH3BzKaqgGdD0ZSOfg"
+    },
+    {
+      "date": "2026/01/30 11:22:09",
+      "merchant": {
+        "name": "Development Work RW",
+        "email": null
+      },
+      "amount": {
+        "full": "USD 0.77",
+        "currency": "USD",
+        "value": "0.77",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "INVALID",
+        "type": "failed"
+      },
+      "customer": {
+        "name": "Customer                         User",
+        "email": "customer@ogera.com",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "OGERA-1769761325503-83ad6c91-7",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/0?trackingId=bf555157-2f58-43d7-8026-dacab3947acc",
+      "device_fingerprint": "8gEDtZ5oCgjFcU0jISwx"
+    },
+    {
+      "date": "2026/01/30 11:21:13",
+      "merchant": {
+        "name": "Development Work RW",
+        "email": null
+      },
+      "amount": {
+        "full": "USD 0.77",
+        "currency": "USD",
+        "value": "0.77",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "INVALID",
+        "type": "failed"
+      },
+      "customer": {
+        "name": "Customer                         User",
+        "email": "customer@ogera.com",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "OGERA-1769761268392-83ad6c91-7",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/0?trackingId=ee313ec7-aa75-4122-bda3-daca79ed45df",
+      "device_fingerprint": "ZG8uciTIgNNd8khEKJK4"
+    },
+    {
+      "date": "2026/01/30 11:17:37",
+      "merchant": {
+        "name": "Development Work UG",
+        "email": null
+      },
+      "amount": {
+        "full": "UGX 99",
+        "currency": "UGX",
+        "value": "99",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "INVALID",
+        "type": "failed"
+      },
+      "customer": {
+        "name": "NA siva@webnexs.in",
+        "email": "siva@webnexs.in",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "ORDER-1769761057179",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/0?trackingId=8bc095af-e52e-4f86-b9d3-daca5ceb685e",
+      "device_fingerprint": "Q7bcbFbhrhZN1Gh431Dw"
+    },
+    {
+      "date": "2026/01/30 11:17:20",
+      "merchant": {
+        "name": "Development Work UG",
+        "email": null
+      },
+      "amount": {
+        "full": "UGX 99",
+        "currency": "UGX",
+        "value": "99",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "INVALID",
+        "type": "failed"
+      },
+      "customer": {
+        "name": "NA test@flicknexs.com",
+        "email": "test@flicknexs.com",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "ORDER-1769761039847",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/0?trackingId=d583ac32-4ba5-4039-9d62-daca7ce7260f",
+      "device_fingerprint": "Xs664ulw49zVB9BIlJFN"
+    },
+    {
+      "date": "2026/01/30 11:16:40",
+      "merchant": {
+        "name": "Development Work-KE",
+        "email": null
+      },
+      "amount": {
+        "full": "KES 985Card",
+        "currency": "KES",
+        "value": "985",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "Completed",
+        "type": "success"
+      },
+      "customer": {
+        "name": "John                         Doe",
+        "email": "customer@test.com",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "697c68f9b32fc",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/104130?trackingId=efe2a674-6be9-4c56-a96f-daca1cdd46c8",
+      "device_fingerprint": "uSUFHOM90tEWZ4Ssha1e"
+    },
+    {
+      "date": "2026/01/30 11:16:07",
+      "merchant": {
+        "name": "Development Work-KE",
+        "email": null
+      },
+      "amount": {
+        "full": "KES 1",
+        "currency": "KES",
+        "value": "1",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "INVALID",
+        "type": "failed"
+      },
+      "customer": {
+        "name": "John                         Doe",
+        "email": "customer@test.com",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "697c68d85f5b6",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/0?trackingId=e212993f-3d0e-4db8-bfa6-daca90084cf0",
+      "device_fingerprint": "hiJlh5WfJS62FE3u0JAL"
+    },
+    {
+      "date": "2026/01/30 11:15:01",
+      "merchant": {
+        "name": "Development Work UG",
+        "email": null
+      },
+      "amount": {
+        "full": "UGX 50,000Card",
+        "currency": "UGX",
+        "value": "50000",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "Completed",
+        "type": "success"
+      },
+      "customer": {
+        "name": "Random                         Name",
+        "email": "kingkarberg@gmail.com",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "697c688266da7b3e9da75b59",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/104129?trackingId=01054375-fae1-4ca4-b2b4-daca5cc4da55",
+      "device_fingerprint": "VzTriEoO20x6NPFskeg2"
+    },
+    {
+      "date": "2026/01/30 11:14:38",
+      "merchant": {
+        "name": "Development Work UG",
+        "email": null
+      },
+      "amount": {
+        "full": "UGX 60,000Card",
+        "currency": "UGX",
+        "value": "60000",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "Completed",
+        "type": "success"
+      },
+      "customer": {
+        "name": "NA customer@example.com",
+        "email": "customer@example.com",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "697c686da48a78de53af54b1",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/104128?trackingId=12cb61d4-abad-461a-bf45-daca9cbf48b0",
+      "device_fingerprint": "YsdcBmDl0TywPyzX2dv0"
+    },
+    {
+      "date": "2026/01/30 11:12:00",
+      "merchant": {
+        "name": "Development Work UG",
+        "email": null
+      },
+      "amount": {
+        "full": "UGX 60,000Card",
+        "currency": "UGX",
+        "value": "60000",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "Completed",
+        "type": "success"
+      },
+      "customer": {
+        "name": "NA customer@example.com",
+        "email": "customer@example.com",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "697c67cfa48a78de53af5497",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/104127?trackingId=2cabe73d-f1ea-45c9-9521-dacad6322c5d",
+      "device_fingerprint": "X2STVeX5IzYCNhuptucT"
+    },
+    {
+      "date": "2026/01/30 11:05:24",
+      "merchant": {
+        "name": "Masai 2",
+        "email": null
+      },
+      "amount": {
+        "full": "KES 1",
+        "currency": "KES",
+        "value": "1",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "INVALID",
+        "type": "failed"
+      },
+      "customer": {
+        "name": "Lazaro                         Ongele",
+        "email": "lazaro-test@pesapal.com",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "RDT:1769760323.81792",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/0?trackingId=6359a338-d7a1-486f-b692-dacae29d8586",
+      "device_fingerprint": "7qfBhtkdD9gxUgR1sQPB"
+    },
+    {
+      "date": "2026/01/30 10:56:45",
+      "merchant": {
+        "name": "Masai 2",
+        "email": null
+      },
+      "amount": {
+        "full": "KES 6Card",
+        "currency": "KES",
+        "value": "6",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "Completed",
+        "type": "success"
+      },
+      "customer": {
+        "name": "Fredrick                         Mwangima",
+        "email": "fredm@pesapal.com",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "RDT:1769759804.99959",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/104126?trackingId=46572b37-d4fe-4096-ae80-daca821deba7",
+      "device_fingerprint": "zhiNn5W0Ev1SYcKpI806"
+    },
+    {
+      "date": "2026/01/30 10:43:50",
+      "merchant": {
+        "name": "Masai 2",
+        "email": null
+      },
+      "amount": {
+        "full": "KES 1",
+        "currency": "KES",
+        "value": "1",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "INVALID",
+        "type": "failed"
+      },
+      "customer": {
+        "name": "Lazaro                         Ongele",
+        "email": "lazaro-test@pesapal.com",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "RDT:1769759030.42847",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/0?trackingId=6266db22-dfb9-4263-ac0a-daca57c60e29",
+      "device_fingerprint": "vaCTawno3PP0v9JfyQmg"
+    },
+    {
+      "date": "2026/01/30 10:43:23",
+      "merchant": {
+        "name": "Development Work-KE",
+        "email": null
+      },
+      "amount": {
+        "full": "KES 1MpesaKE",
+        "currency": "KES",
+        "value": "1",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "Completed",
+        "type": "success"
+      },
+      "customer": {
+        "name": "John                         Doe",
+        "email": "customer@test.com",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "697c612c4a700",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/104125?trackingId=b6a14074-14f0-4ffd-83de-dacafaf265db",
+      "device_fingerprint": "SI8ICyY1gXvR6tf8ykOV"
+    },
+    {
+      "date": "2026/01/30 10:41:46",
+      "merchant": {
+        "name": "Development Work-KE",
+        "email": null
+      },
+      "amount": {
+        "full": "KES 561MpesaKE",
+        "currency": "KES",
+        "value": "561",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "Failed",
+        "type": "success"
+      },
+      "customer": {
+        "name": "John                         Doe",
+        "email": "customer@test.com",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "697c60cb3b40e",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/104124?trackingId=7dd36c84-7beb-44d8-9ca4-dacab7a758fc",
+      "device_fingerprint": "lIOlnC2WcdKc05kQQIW5"
+    },
+    {
+      "date": "2026/01/30 10:35:46",
+      "merchant": {
+        "name": "Masai 2",
+        "email": null
+      },
+      "amount": {
+        "full": "KES 1",
+        "currency": "KES",
+        "value": "1",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "INVALID",
+        "type": "failed"
+      },
+      "customer": {
+        "name": "Lazaro                         Ongele",
+        "email": "lazaro-test@pesapal.com",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "RDT:1769758545.77914",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/0?trackingId=63928eb4-898b-49c0-a8c7-daca50e88973",
+      "device_fingerprint": "LIXUAQ1UJP7GlZsrWxRS"
+    },
+    {
+      "date": "2026/01/30 10:34:22",
+      "merchant": {
+        "name": "Masai 2",
+        "email": null
+      },
+      "amount": {
+        "full": "KES 1",
+        "currency": "KES",
+        "value": "1",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "INVALID",
+        "type": "failed"
+      },
+      "customer": {
+        "name": "Lazaro                         Ongele",
+        "email": "lazaro-test@pesapal.com",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "RDT:1769758462.42787",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/0?trackingId=dcad3fb1-db04-498c-83c2-daca50d407db",
+      "device_fingerprint": "UUyrpaZ5O2MASOuTFwzi"
+    },
+    {
+      "date": "2026/01/30 10:33:20",
+      "merchant": {
+        "name": "Development Work-KE",
+        "email": null
+      },
+      "amount": {
+        "full": "KES 60,000Card",
+        "currency": "KES",
+        "value": "60000",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "Completed",
+        "type": "success"
+      },
+      "customer": {
+        "name": "Kik                         Juma",
+        "email": "j.kiki@gmail.com",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "TP-15-20260130073318-03d69815",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/104123?trackingId=19accf03-08ef-4d07-83db-daca5a5e55b7",
+      "device_fingerprint": "7gyI0X0k7FpnB8dZQVnL"
+    },
+    {
+      "date": "2026/01/30 10:33:20",
+      "merchant": {
+        "name": "Development Work-KE",
+        "email": null
+      },
+      "amount": {
+        "full": "KES 60,000",
+        "currency": "KES",
+        "value": "60000",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "INVALID",
+        "type": "failed"
+      },
+      "customer": {
+        "name": "Kik                         Juma",
+        "email": "j.kiki@gmail.com",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "TP-16-20260130073318-aa9bc05d",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/0?trackingId=158cf597-6d89-40cb-b17f-daca23f7e18a",
+      "device_fingerprint": "SDKaORCE3E07wPxWH3NQ"
+    },
+    {
+      "date": "2026/01/30 10:32:25",
+      "merchant": {
+        "name": "Masai 2",
+        "email": null
+      },
+      "amount": {
+        "full": "KES 1",
+        "currency": "KES",
+        "value": "1",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "INVALID",
+        "type": "failed"
+      },
+      "customer": {
+        "name": "Lazaro                         Ongele",
+        "email": "lazaro-test@pesapal.com",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "RDT:1769758345.04871",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/0?trackingId=743f48db-7db8-40f2-abb4-daca7a50d0c9",
+      "device_fingerprint": "OU8LNc8dD2qQlg50DB8i"
+    },
+    {
+      "date": "2026/01/30 10:22:37",
+      "merchant": {
+        "name": "Masai 2",
+        "email": null
+      },
+      "amount": {
+        "full": "KES 1",
+        "currency": "KES",
+        "value": "1",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "INVALID",
+        "type": "failed"
+      },
+      "customer": {
+        "name": "Lazaro                         Ongele",
+        "email": "lazaro-test@pesapal.com",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "RDT:1769757756.90666",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/0?trackingId=7e54a3bd-0e54-4235-8024-daca968d0ce9",
+      "device_fingerprint": "CpIcglqdZjNzNAT3DFoV"
+    },
+    {
+      "date": "2026/01/30 10:19:00",
+      "merchant": {
+        "name": "Masai 2",
+        "email": null
+      },
+      "amount": {
+        "full": "KES 1Card",
+        "currency": "KES",
+        "value": "1",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "Completed",
+        "type": "success"
+      },
+      "customer": {
+        "name": "Lazaro                         Ongele",
+        "email": "lazaro-test@pesapal.com",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "RDT:1769757540.21826",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/104122?trackingId=0bc20b4f-48fe-4c2e-a42a-daca33249992",
+      "device_fingerprint": "WCJV5SfAEqMWh2HsojIF"
+    },
+    {
+      "date": "2026/01/30 09:09:24",
+      "merchant": {
+        "name": "Development Work UG",
+        "email": null
+      },
+      "amount": {
+        "full": "UGX 354Card",
+        "currency": "UGX",
+        "value": "354",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "Failed",
+        "type": "success"
+      },
+      "customer": {
+        "name": "Pizzademocom                         POS",
+        "email": "pizza@demo.com",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "ORD-ORD000068-364732",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/104117?trackingId=d21f4106-7bb9-4fba-ab3c-daca04ab2916",
+      "device_fingerprint": "ivH84jxreULnObA1evh6"
+    },
+    {
+      "date": "2026/01/30 09:08:00",
+      "merchant": {
+        "name": "Development Work UG",
+        "email": null
+      },
+      "amount": {
+        "full": "UGX 354Card",
+        "currency": "UGX",
+        "value": "354",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "Completed",
+        "type": "success"
+      },
+      "customer": {
+        "name": "Pizzademocom                         POS",
+        "email": "pizza@demo.com",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "ORD-ORD000067-279785",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/104116?trackingId=019672ba-a842-4c3c-99ff-dacad14e3b7f",
+      "device_fingerprint": "6J6WwSKJgBQJRo7Puldj"
+    },
+    {
+      "date": "2026/01/30 09:06:07",
+      "merchant": {
+        "name": "Development Work UG",
+        "email": null
+      },
+      "amount": {
+        "full": "UGX 25.96Card",
+        "currency": "UGX",
+        "value": "25.96",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "Completed",
+        "type": "success"
+      },
+      "customer": {
+        "name": "Pizzademocom                         POS",
+        "email": "pizza@demo.com",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "ORD-ORD000066-167193",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/104115?trackingId=08184ab0-e372-4e86-91d8-daca4ab076d2",
+      "device_fingerprint": "yv4dWjYZ5IzBNxJwJ0EI"
+    },
+    {
+      "date": "2026/01/30 09:03:40",
+      "merchant": {
+        "name": "Development Work UG",
+        "email": null
+      },
+      "amount": {
+        "full": "UGX 25.96Card",
+        "currency": "UGX",
+        "value": "25.96",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "Completed",
+        "type": "success"
+      },
+      "customer": {
+        "name": "Pizzademocom                         POS",
+        "email": "pizza@demo.com",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "ORD-ORD000062-020263",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/104114?trackingId=c8011dab-9487-40dd-baaf-daca50cea4c5",
+      "device_fingerprint": "4RTam24Kikn7o0oYONKD"
+    },
+    {
+      "date": "2026/01/30 08:58:43",
+      "merchant": {
+        "name": "Development Work UG",
+        "email": null
+      },
+      "amount": {
+        "full": "UGX 25.96Card",
+        "currency": "UGX",
+        "value": "25.96",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "Completed",
+        "type": "success"
+      },
+      "customer": {
+        "name": "Pizzademocom                         POS",
+        "email": "pizza@demo.com",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "ORD-ORD000061-723727",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/104113?trackingId=3a966df2-3dfc-4496-936a-dacaa9d67cbf",
+      "device_fingerprint": "EHWzFDmsnEb3OVTIqjei"
+    },
+    {
+      "date": "2026/01/30 08:52:58",
+      "merchant": {
+        "name": "Development Work UG",
+        "email": null
+      },
+      "amount": {
+        "full": "UGX 4,720",
+        "currency": "UGX",
+        "value": "4720",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "INVALID",
+        "type": "failed"
+      },
+      "customer": {
+        "name": "Pizzademocom                         POS",
+        "email": "pizza@demo.com",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "ORD-ORD000033-378458",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/0?trackingId=cecbfc29-5bce-431e-a03b-daca8f93244e",
+      "device_fingerprint": "nKeomSWPhIeFfNpZqsZt"
+    },
+    {
+      "date": "2026/01/30 08:27:35",
+      "merchant": {
+        "name": "Development Work TZ",
+        "email": null
+      },
+      "amount": {
+        "full": "TZS 5,020Card",
+        "currency": "TZS",
+        "value": "5020",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "Failed",
+        "type": "success"
+      },
+      "customer": {
+        "name": "Shelby IP:27.59.95.105",
+        "email": null,
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "ML0FYQVL-54534514",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/104112?trackingId=942154dc-95b2-45af-aaed-dacab30d0e5b",
+      "device_fingerprint": "5V9QEXFgieplh4ODMJ3L"
+    },
+    {
+      "date": "2026/01/30 08:25:26",
+      "merchant": {
+        "name": "Development Work TZ",
+        "email": null
+      },
+      "amount": {
+        "full": "TZS 5,020Card",
+        "currency": "TZS",
+        "value": "5020",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "Failed",
+        "type": "success"
+      },
+      "customer": {
+        "name": "Shelby IP:27.59.95.105",
+        "email": null,
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "ML0FVYVI-9421813",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/104111?trackingId=a8076fde-c409-4725-8b59-daca9933d1e9",
+      "device_fingerprint": "InGbrRVM92ZEPEwX6Ckm"
+    },
+    {
+      "date": "2026/01/30 08:23:49",
+      "merchant": {
+        "name": "Development Work TZ",
+        "email": null
+      },
+      "amount": {
+        "full": "TZS 5,020",
+        "currency": "TZS",
+        "value": "5020",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "INVALID",
+        "type": "failed"
+      },
+      "customer": {
+        "name": "Shelby",
+        "email": null,
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "ML0FTW8F-20728693",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/0?trackingId=69ec2353-25ec-4244-a87f-daca529de93e",
+      "device_fingerprint": "aseb1V6O5D0MyIojuPYs"
+    },
+    {
+      "date": "2026/01/30 08:19:58",
+      "merchant": {
+        "name": "Development Work UG",
+        "email": null
+      },
+      "amount": {
+        "full": "USD 52,000Card",
+        "currency": "USD",
+        "value": "52000",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "Completed",
+        "type": "success"
+      },
+      "customer": {
+        "name": "Edgar                         Tinkamanyire",
+        "email": "tinka.edgar@sharecardapp.com",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "6efa38ea-c4aa-4eac-950f-accec6440544",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/104110?trackingId=aa66f370-4ca4-42c1-8c36-daca5ef8f0e0",
+      "device_fingerprint": "JTdD1PWBh3hLOinW03cu"
+    },
+    {
+      "date": "2026/01/30 08:16:13",
+      "merchant": {
+        "name": "Development Work UG",
+        "email": null
+      },
+      "amount": {
+        "full": "USD 520,000Card",
+        "currency": "USD",
+        "value": "520000",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "Completed",
+        "type": "success"
+      },
+      "customer": {
+        "name": "Edgar                         Tinkamanyire",
+        "email": "tinka.edgar@sharecardapp.com",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "a3b01ea3-7fdc-4b0e-8875-5764c71cad40",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/104109?trackingId=1216045c-d7c0-4653-9889-daca3e8ab710",
+      "device_fingerprint": "vc0p2oJ3NbXK7gYdXf8q"
+    },
+    {
+      "date": "2026/01/30 07:38:15",
+      "merchant": {
+        "name": "Development Work UG",
+        "email": null
+      },
+      "amount": {
+        "full": "UGX 1,123AirtelUG",
+        "currency": "UGX",
+        "value": "1123",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "Completed",
+        "type": "success"
+      },
+      "customer": {
+        "name": "NA info@missearth.org",
+        "email": "info@missearth.org",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "697c35b76d3c0498131907aa",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/104108?trackingId=0b223868-231d-4350-a51b-daca6d5e3d84",
+      "device_fingerprint": "FFYDw4OQPu4BDyavRRtM"
+    },
+    {
+      "date": "2026/01/30 07:36:39",
+      "merchant": {
+        "name": "Development Work UG",
+        "email": null
+      },
+      "amount": {
+        "full": "UGX 177Card",
+        "currency": "UGX",
+        "value": "177",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "Failed",
+        "type": "success"
+      },
+      "customer": {
+        "name": "Dhabayopmailcom                         POS",
+        "email": "dhaba.01@yopmail.com",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "ORD-ORD000005-799517",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/104107?trackingId=e2cf4201-2ce7-4bc1-b202-daca0d2ee506",
+      "device_fingerprint": "8lSLMvSfMLJyCkkdHQfI"
+    },
+    {
+      "date": "2026/01/30 07:35:09",
+      "merchant": {
+        "name": "Development Work UG",
+        "email": null
+      },
+      "amount": {
+        "full": "UGX 177Card",
+        "currency": "UGX",
+        "value": "177",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "Completed",
+        "type": "success"
+      },
+      "customer": {
+        "name": "Dhabayopmailcom                         POS",
+        "email": "dhaba.01@yopmail.com",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "ORD-ORD000004-709113",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/104106?trackingId=0a1c3ccd-58a0-469e-8027-daca069c114e",
+      "device_fingerprint": "fLCvXqs6GMHGHRk2iWqA"
+    },
+    {
+      "date": "2026/01/30 07:33:52",
+      "merchant": {
+        "name": "Development Work UG",
+        "email": null
+      },
+      "amount": {
+        "full": "UGX 177Card",
+        "currency": "UGX",
+        "value": "177",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "Completed",
+        "type": "success"
+      },
+      "customer": {
+        "name": "Dhabayopmailcom                         POS",
+        "email": "dhaba.01@yopmail.com",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "ORD-ORD000003-631982",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/104105?trackingId=4972fb01-2ac9-4255-a09e-dacac67639b8",
+      "device_fingerprint": "T4hHWhYWJ2WTqwlebmII"
+    },
+    {
+      "date": "2026/01/30 06:27:53",
+      "merchant": {
+        "name": "Development Work-KE",
+        "email": null
+      },
+      "amount": {
+        "full": "KES 50.05Card",
+        "currency": "KES",
+        "value": "50.05",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "Completed",
+        "type": "success"
+      },
+      "customer": {
+        "name": "NA cydney.nicolas@test.moneyhash.io",
+        "email": "cydney.nicolas@test.moneyhash.io",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "b6dec243-9b4e-4301-b64f-8153d2447b84",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/104104?trackingId=f8df01f8-890a-427d-90e4-daca1edc9d58",
+      "device_fingerprint": "8CHUKtMsHzF22F0mMCpm"
+    },
+    {
+      "date": "2026/01/30 06:27:13",
+      "merchant": {
+        "name": "Development Work-KE",
+        "email": null
+      },
+      "amount": {
+        "full": "KES 50.05Card",
+        "currency": "KES",
+        "value": "50.05",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "Completed",
+        "type": "success"
+      },
+      "customer": {
+        "name": "NA susie.gislason@test.moneyhash.io",
+        "email": "susie.gislason@test.moneyhash.io",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "12a7faea-42ba-49a4-901f-660fe3c13cbd",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/104103?trackingId=800b6e92-ab21-4045-a844-dacad8624024",
+      "device_fingerprint": "KYTAQ2jEmqe1BTUsVAr2"
+    },
+    {
+      "date": "2026/01/30 05:45:00",
+      "merchant": {
+        "name": "Development Work UG",
+        "email": null
+      },
+      "amount": {
+        "full": "UGX 5,000Card",
+        "currency": "UGX",
+        "value": "5000",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "Completed",
+        "type": "success"
+      },
+      "customer": {
+        "name": "Hillary                         Clington",
+        "email": "forexizen@gmail.com",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "ADM-2026-34085440-1769741100",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/104102?trackingId=d78b9852-4c41-4ac3-9ee9-dacaf3d7b1ee",
+      "device_fingerprint": "48HITQK8NW4Wrp44DOyU"
+    },
+    {
+      "date": "2026/01/30 05:22:32",
+      "merchant": {
+        "name": "Development Work UG",
+        "email": null
+      },
+      "amount": {
+        "full": "UGX 460,000",
+        "currency": "UGX",
+        "value": "460000",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "INVALID",
+        "type": "failed"
+      },
+      "customer": {
+        "name": "Michael                         Clington",
+        "email": "student@school.com",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "HS-TPC-2026-0001-1769739752",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/0?trackingId=d9621096-43dd-4580-8632-daca61dd9037",
+      "device_fingerprint": "o233zJLE4C25KYT5ioma"
+    },
+    {
+      "date": "2026/01/30 03:16:19",
+      "merchant": {
+        "name": "Development Work RW",
+        "email": null
+      },
+      "amount": {
+        "full": "RWF 30,000Card",
+        "currency": "RWF",
+        "value": "30000",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "Completed",
+        "type": "success"
+      },
+      "customer": {
+        "name": "NA jeandamour589@gmail.com",
+        "email": "jeandamour589@gmail.com",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "ORD-1769732175812-d36f87",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/104101?trackingId=9a68908e-d5b9-4a1e-9688-dacaeff8102c",
+      "device_fingerprint": "cNHk8p4wciGUAn8jbSsg"
+    },
+    {
+      "date": "2026/01/30 03:06:58",
+      "merchant": {
+        "name": "Development Work RW",
+        "email": null
+      },
+      "amount": {
+        "full": "RWF 20,000Card",
+        "currency": "RWF",
+        "value": "20000",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "Completed",
+        "type": "success"
+      },
+      "customer": {
+        "name": "NA jeandamour589@gmail.com",
+        "email": "jeandamour589@gmail.com",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "ORD-1769731614463-d36f87",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/104100?trackingId=4a85ea5f-ab3b-426d-af92-daca38769a19",
+      "device_fingerprint": "z9l1AmLkvyy4nFqznuCv"
+    },
+    {
+      "date": "2026/01/30 02:32:12",
+      "merchant": {
+        "name": "Development Work-KE",
+        "email": null
+      },
+      "amount": {
+        "full": "KES 1",
+        "currency": "KES",
+        "value": "1",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "INVALID",
+        "type": "failed"
+      },
+      "customer": {
+        "name": "Be                         Njini",
+        "email": "kaybernard449+wplaragonalamaya@gmail.com",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "ORDER-1905-1769729533",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/0?trackingId=03ed1c46-2d19-4421-95f0-daca84132c33",
+      "device_fingerprint": "LxyDqm0sLB9REhNaUGLw"
+    },
+    {
+      "date": "2026/01/30 02:29:58",
+      "merchant": {
+        "name": "Development Work-KE",
+        "email": null
+      },
+      "amount": {
+        "full": "KES 1",
+        "currency": "KES",
+        "value": "1",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "INVALID",
+        "type": "failed"
+      },
+      "customer": {
+        "name": "Be                         Njini",
+        "email": "kaybernard449+wplaragonalamaya@gmail.com",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "ORDER-1905-1769729399",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/0?trackingId=eb1131c5-576f-4d2f-b072-daca82061774",
+      "device_fingerprint": "KFpuYKyqyaMvbFAqvUnl"
+    },
+    {
+      "date": "2026/01/30 02:27:14",
+      "merchant": {
+        "name": "Development Work-KE",
+        "email": null
+      },
+      "amount": {
+        "full": "KES 1",
+        "currency": "KES",
+        "value": "1",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "INVALID",
+        "type": "failed"
+      },
+      "customer": {
+        "name": "Be                         Njini",
+        "email": "kaybernard449+wplaragonalamaya@gmail.com",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "ORDER-1905-1769729235",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/0?trackingId=ee1dca34-f68a-44b8-80cb-dacaff038920",
+      "device_fingerprint": "1txzaa7Wp3rXBt9U6Bpc"
+    },
+    {
+      "date": "2026/01/30 02:19:17",
+      "merchant": {
+        "name": "Development Work RW",
+        "email": null
+      },
+      "amount": {
+        "full": "RWF 10,000Card",
+        "currency": "RWF",
+        "value": "10000",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "Completed",
+        "type": "success"
+      },
+      "customer": {
+        "name": "NA jeandamour589@gmail.com",
+        "email": "jeandamour589@gmail.com",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "ORD-1769728753447-d36f87",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/104099?trackingId=14e3704e-add0-447e-a880-daca238f9eaa",
+      "device_fingerprint": "Zp5aNv68XOljSCOwaoT5"
+    },
+    {
+      "date": "2026/01/30 02:15:47",
+      "merchant": {
+        "name": "Development Work-KE",
+        "email": null
+      },
+      "amount": {
+        "full": "USD 15",
+        "currency": "USD",
+        "value": "15",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "INVALID",
+        "type": "failed"
+      },
+      "customer": {
+        "name": "Siko                         Sama",
+        "email": "kaybernard449+wplaragoneducator@gmail.com",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "PESAPAL-2495",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/0?trackingId=c4046815-d93a-44a1-90c5-daca1d182414",
+      "device_fingerprint": "3b7OEOatGSX1Fm7H2VYc"
+    },
+    {
+      "date": "2026/01/30 02:07:11",
+      "merchant": {
+        "name": "Development Work-KE",
+        "email": null
+      },
+      "amount": {
+        "full": "USD 18",
+        "currency": "USD",
+        "value": "18",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "INVALID",
+        "type": "failed"
+      },
+      "customer": {
+        "name": "Siko                         Sama",
+        "email": "kaybernard449+wplaragonalamaya@gmail.com",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "PESAPAL-2493",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/0?trackingId=47ed84a3-2a04-430e-b679-daca35043eac",
+      "device_fingerprint": "oNxL3pViHnePyOkRa8mz"
+    },
+    {
+      "date": "2026/01/30 01:53:22",
+      "merchant": {
+        "name": "Development Work UG",
+        "email": null
+      },
+      "amount": {
+        "full": "UGX 5,000Card",
+        "currency": "UGX",
+        "value": "5000",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "Completed",
+        "type": "success"
+      },
+      "customer": {
+        "name": "Hillary                         Clington",
+        "email": "forexizen@gmail.com",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "ADM-2026-A9A8E743-1769727202",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/104098?trackingId=877d183f-5add-466b-a26c-dacb99480801",
+      "device_fingerprint": "DxRSPUyKYMSJKfCx7fIS"
+    },
+    {
+      "date": "2026/01/30 01:52:42",
+      "merchant": {
+        "name": "Development Work UG",
+        "email": null
+      },
+      "amount": {
+        "full": "UGX 5,000",
+        "currency": "UGX",
+        "value": "5000",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "INVALID",
+        "type": "failed"
+      },
+      "customer": {
+        "name": "Hillary                         Clington",
+        "email": "forexizen@gmail.com",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "ADM-2026-A9A8E743-1769727161",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/0?trackingId=d6139f90-1f95-4365-9f6b-dacb394303eb",
+      "device_fingerprint": "y8FLWRPlef5WEOTfHNDn"
+    },
+    {
+      "date": "2026/01/30 01:42:29",
+      "merchant": {
+        "name": "Development Work UG",
+        "email": null
+      },
+      "amount": {
+        "full": "UGX 2,246Card",
+        "currency": "UGX",
+        "value": "2246",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "Completed",
+        "type": "success"
+      },
+      "customer": {
+        "name": "NA info@missearth.org",
+        "email": "info@missearth.org",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "697be2546d3c049813190773",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/104097?trackingId=82d6561d-b68c-477d-aa49-dacb175e2724",
+      "device_fingerprint": "nklB9ocRJbLNPpBPJbHt"
+    },
+    {
+      "date": "2026/01/30 01:40:20",
+      "merchant": {
+        "name": "Development Work UG",
+        "email": null
+      },
+      "amount": {
+        "full": "UGX 60,000Card",
+        "currency": "UGX",
+        "value": "60000",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "Completed",
+        "type": "success"
+      },
+      "customer": {
+        "name": "NA info@missearth.org",
+        "email": "info@missearth.org",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "697be1d3a48a78de53af547a",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/104096?trackingId=1839a722-caf0-4156-b9ea-dacbd8e7e291",
+      "device_fingerprint": "9HBFaiSLgxb2fEzQlHw5"
+    },
+    {
+      "date": "2026/01/30 01:38:15",
+      "merchant": {
+        "name": "Development Work UG",
+        "email": null
+      },
+      "amount": {
+        "full": "UGX 60,000",
+        "currency": "UGX",
+        "value": "60000",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "INVALID",
+        "type": "failed"
+      },
+      "customer": {
+        "name": "NA info@missearth.org",
+        "email": "info@missearth.org",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "697be157a48a78de53af546d",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/0?trackingId=7ca85638-1d9a-4a80-98c8-dacb4c0bbb9f",
+      "device_fingerprint": "GQZXXKL954sw9Q1B4mRY"
+    },
+    {
+      "date": "2026/01/30 01:37:16",
+      "merchant": {
+        "name": "Development Work UG",
+        "email": null
+      },
+      "amount": {
+        "full": "UGX 60,000",
+        "currency": "UGX",
+        "value": "60000",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "INVALID",
+        "type": "failed"
+      },
+      "customer": {
+        "name": "NA info@missearth.org",
+        "email": "info@missearth.org",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "697be11ba48a78de53af5460",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/0?trackingId=e8f20a8d-db1b-4fe7-83f9-dacb3c0476ec",
+      "device_fingerprint": "0JlXuJtJoxpcF1ics3ww"
+    },
+    {
+      "date": "2026/01/30 01:26:28",
+      "merchant": {
+        "name": "Development Work UG",
+        "email": null
+      },
+      "amount": {
+        "full": "UGX 60,000Card",
+        "currency": "UGX",
+        "value": "60000",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "Completed",
+        "type": "success"
+      },
+      "customer": {
+        "name": "NA customer@example.com",
+        "email": "customer@example.com",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "697bde93a48a78de53af541e",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/104095?trackingId=8791320c-3038-4490-a0c0-dacb054e6c7d",
+      "device_fingerprint": "Blp8lwmWeuwOFzLMWPpR"
+    },
+    {
+      "date": "2026/01/30 01:10:07",
+      "merchant": {
+        "name": "Development Work UG",
+        "email": null
+      },
+      "amount": {
+        "full": "UGX 60,000Card",
+        "currency": "UGX",
+        "value": "60000",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "Completed",
+        "type": "success"
+      },
+      "customer": {
+        "name": "NA customer@example.com",
+        "email": "customer@example.com",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "697bdabe00ed832d580e58c1",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/104094?trackingId=5f0bdb9e-9aaf-431a-9b80-dacb94d5d908",
+      "device_fingerprint": "GqYwEgXISU1UMZAGtQvf"
+    },
+    {
+      "date": "2026/01/30 01:07:39",
+      "merchant": {
+        "name": "Development Work UG",
+        "email": null
+      },
+      "amount": {
+        "full": "UGX 60,000Card",
+        "currency": "UGX",
+        "value": "60000",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "Completed",
+        "type": "success"
+      },
+      "customer": {
+        "name": "NA customer@example.com",
+        "email": "customer@example.com",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "697bda2a00ed832d580e588f",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/104093?trackingId=f2dc5f2e-905d-468c-8313-dacb44c3b640",
+      "device_fingerprint": "W7MES7Fd2nosdVvJiU9k"
+    },
+    {
+      "date": "2026/01/30 00:49:18",
+      "merchant": {
+        "name": "Development Work UG",
+        "email": null
+      },
+      "amount": {
+        "full": "UGX 60,000Card",
+        "currency": "UGX",
+        "value": "60000",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "Completed",
+        "type": "success"
+      },
+      "customer": {
+        "name": "NA customer@example.com",
+        "email": "customer@example.com",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "697bd5ddc360b6af9dc9ff2c",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/104092?trackingId=55cff35d-026b-4082-ad66-dacb3dd60d4f",
+      "device_fingerprint": "NHnV8X56p00MVt7YQ182"
+    },
+    {
+      "date": "2026/01/30 00:18:16",
+      "merchant": {
+        "name": "Development Work UG",
+        "email": null
+      },
+      "amount": {
+        "full": "UGX 60,000Card",
+        "currency": "UGX",
+        "value": "60000",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "Completed",
+        "type": "success"
+      },
+      "customer": {
+        "name": "NA customer@example.com",
+        "email": "customer@example.com",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "697bce9756ae11ccc4b2e323",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/104091?trackingId=a49748c7-f735-4e7a-a1b1-dacb8b579880",
+      "device_fingerprint": "mjdXIS8jq3ywvKj4EdgU"
+    },
+    {
+      "date": "2026/01/30 00:03:01",
+      "merchant": {
+        "name": "Development Work UG",
+        "email": null
+      },
+      "amount": {
+        "full": "UGX 60,000Card",
+        "currency": "UGX",
+        "value": "60000",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "Completed",
+        "type": "success"
+      },
+      "customer": {
+        "name": "NA customer@example.com",
+        "email": "customer@example.com",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "697bcb04e754842bc7f364e2",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/104090?trackingId=bbf60650-d1ea-4e92-8f37-dacb994d8e53",
+      "device_fingerprint": "WRTltyOZAOqfIWASqRV5"
+    },
+    {
+      "date": "2026/01/29 23:47:52",
+      "merchant": {
+        "name": "Development Work UG",
+        "email": null
+      },
+      "amount": {
+        "full": "UGX 60,000Card",
+        "currency": "UGX",
+        "value": "60000",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "Completed",
+        "type": "success"
+      },
+      "customer": {
+        "name": "NA customer@example.com",
+        "email": "customer@example.com",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "697bc776e754842bc7f364ce",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/104089?trackingId=09c7cdc1-e3b2-4c34-a887-dacba8dddb56",
+      "device_fingerprint": "636NhCvYB7vGBcSh09HA"
+    },
+    {
+      "date": "2026/01/29 23:33:18",
+      "merchant": {
+        "name": "Development Work-KE",
+        "email": null
+      },
+      "amount": {
+        "full": "KES 1",
+        "currency": "KES",
+        "value": "1",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "INVALID",
+        "type": "failed"
+      },
+      "customer": {
+        "name": "Be                         Njini",
+        "email": "kaybernard449+wplaragonalamaya@gmail.com",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "ORDER-1905-1769718800",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/0?trackingId=4ae703e2-8895-42e1-b779-dacb7d3f58d7",
+      "device_fingerprint": "oC5xumpWAqEmCSrCb9og"
+    },
+    {
+      "date": "2026/01/29 23:29:08",
+      "merchant": {
+        "name": "Development Work-KE",
+        "email": null
+      },
+      "amount": {
+        "full": "USD 5Card",
+        "currency": "USD",
+        "value": "5",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "Completed",
+        "type": "success"
+      },
+      "customer": {
+        "name": "NA wwambugu62@gmail.com",
+        "email": "wwambugu62@gmail.com",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "46e263e1-5ce8-4618-b8bb-77e222d337fe",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/104088?trackingId=4f2610ec-e754-417c-a2ae-dacbdd209999",
+      "device_fingerprint": "tRZ7xqKfi9NqQAJPNyV3"
+    },
+    {
+      "date": "2026/01/29 23:17:20",
+      "merchant": {
+        "name": "Development Work-KE",
+        "email": null
+      },
+      "amount": {
+        "full": "KES 9,500",
+        "currency": "KES",
+        "value": "9500",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "INVALID",
+        "type": "failed"
+      },
+      "customer": {
+        "name": "Test                         Test",
+        "email": "gathogosystems@gmail.com",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "PESAPALNTA9KZATX2OP5L8",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/0?trackingId=7614736a-0def-4b3f-8146-dacb4b2ff1dd",
+      "device_fingerprint": "O4fT3Amd6ukmPorFnnmo"
+    },
+    {
+      "date": "2026/01/29 23:17:18",
+      "merchant": {
+        "name": "Development Work-KE",
+        "email": null
+      },
+      "amount": {
+        "full": "KES 9,500",
+        "currency": "KES",
+        "value": "9500",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "INVALID",
+        "type": "failed"
+      },
+      "customer": {
+        "name": "Test                         Test",
+        "email": "gathogosystems@gmail.com",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "PESAPALOQZ1YY93N387PVX",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/0?trackingId=d1df7a09-bed8-450d-bc6a-dacbc4c94927",
+      "device_fingerprint": "Ft7si1YhkI6iefd0kKvS"
+    },
+    {
+      "date": "2026/01/29 23:11:53",
+      "merchant": {
+        "name": "Development Work-KE",
+        "email": null
+      },
+      "amount": {
+        "full": "KES 1",
+        "currency": "KES",
+        "value": "1",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "INVALID",
+        "type": "failed"
+      },
+      "customer": {
+        "name": "Test                         Test",
+        "email": "gathogosystems@gmail.com",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "PESAPALRUOR6Q2QID0G3P5",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/0?trackingId=b1663a88-4b2b-4b59-acd4-dacb716e32cb",
+      "device_fingerprint": "ti3D34f9TGGji9mnGv8K"
+    },
+    {
+      "date": "2026/01/29 23:11:51",
+      "merchant": {
+        "name": "Development Work-KE",
+        "email": null
+      },
+      "amount": {
+        "full": "KES 1",
+        "currency": "KES",
+        "value": "1",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "INVALID",
+        "type": "failed"
+      },
+      "customer": {
+        "name": "Test                         Test",
+        "email": "gathogosystems@gmail.com",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "PESAPALAPEQB0Z2MCHSWT1",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/0?trackingId=f6f440e2-4ce9-4d14-9100-dacb2fd45ab0",
+      "device_fingerprint": "Kmx5Eoo4hB7KKkcqXOOY"
+    },
+    {
+      "date": "2026/01/29 23:02:34",
+      "merchant": {
+        "name": "Development Work-KE",
+        "email": null
+      },
+      "amount": {
+        "full": "KES 1,078",
+        "currency": "KES",
+        "value": "1078",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "INVALID",
+        "type": "failed"
+      },
+      "customer": {
+        "name": "Sam                         Morara",
+        "email": "samorara@gmail.com",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "17706",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/0?trackingId=b784c851-43da-4e51-aed8-dacb22c320b6",
+      "device_fingerprint": "BpNP2N01AyWKjIosAOxj"
+    },
+    {
+      "date": "2026/01/29 22:30:20",
+      "merchant": {
+        "name": "Development Work-KE",
+        "email": null
+      },
+      "amount": {
+        "full": "KES 1",
+        "currency": "KES",
+        "value": "1",
+        "payment_method": null
+      },
+      "payment_account": null,
+      "status": {
+        "text": "INVALID",
+        "type": "failed"
+      },
+      "customer": {
+        "name": "Be                         Njini",
+        "email": "kaybernard449+wplaragonalamaya@gmail.com",
+        "ip_address": null
+      },
+      "confirmation_code": null,
+      "merchant_ref": "ORDER-1904-1769715022",
+      "view_url": "/api3dash/Transactions/Transactions/ViewTransaction/0?trackingId=51217e9f-6a10-4df1-81cf-dacb983be5b2",
+      "device_fingerprint": "gWUd1l9B1z8EBer1TgNg"
+    }
+  ]
+}

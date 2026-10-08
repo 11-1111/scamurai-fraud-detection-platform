@@ -1,0 +1,6 @@
+@API3_BACKEND_HostAddress = http://localhost:5289
+
+GET {{API3_BACKEND_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

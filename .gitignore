@@ -1,0 +1,61 @@
+﻿# Environment variables and secrets
+.env
+.env.*
+!.env.example
+!.env.*.example
+
+# Node.js
+node_modules/
+dist/
+build/
+coverage/
+.npm/
+*.tsbuildinfo
+
+# Vue / Vite
+.vite/
+.nuxt/
+.next/
+
+# .NET
+**/bin/
+**/obj/
+**/publish/
+.vs/
+*.user
+*.suo
+
+# IDE
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# Logs
+*.log
+logs/
+npm-debug.log*
+
+# Archives and deployment artifacts
+*.zip
+*.tar
+*.tar.gz
+*.7z
+
+# Certificates and private keys
+*.pem
+*.pfx
+*.p12
+*.key
+*.crt
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Local databases
+*.sqlite
+*.sqlite3
+
+# Temporary files
+tmp/
+temp/
