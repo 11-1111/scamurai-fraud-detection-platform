@@ -1,0 +1,18 @@
+# Normalise line endings in the repository and check out platform-native
+# where it does not matter. Files consumed by a Linux container keep LF
+# regardless of the host, because CRLF in a shell script, an entrypoint or an
+# nginx config fails at runtime in ways that are tedious to diagnose from
+# Windows.
+* text=auto
+
+Dockerfile      text eol=lf
+*.Dockerfile    text eol=lf
+*.sh            text eol=lf
+*.conf          text eol=lf
+*.cypher        text eol=lf
+*.sql           text eol=lf
+*.yml           text eol=lf
+*.yaml          text eol=lf
+
+# Lockfiles are generated: keep them out of diffs and merges.
+package-lock.json -diff -merge linguist-generated=true
