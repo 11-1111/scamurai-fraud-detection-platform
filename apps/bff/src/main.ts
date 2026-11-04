@@ -11,16 +11,18 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   const isProduction = process.env.NODE_ENV === 'production';
-  const defaultDevOrigins = [
-    'http://localhost:5173',
-    'http://127.0.0.1:5173',
-  ];
+  const defaultDevOrigins = ['http://localhost:5173', 'http://127.0.0.1:5173'];
   const allowedOrigins = process.env.ALLOWED_ORIGINS
-    ? process.env.ALLOWED_ORIGINS.split(',').map((o) => o.trim()).filter(Boolean)
+    ? process.env.ALLOWED_ORIGINS.split(',')
+        .map((o) => o.trim())
+        .filter(Boolean)
     : defaultDevOrigins;
 
   app.enableCors({
-    origin: (requestOrigin, callback) => {
+    origin: (
+      requestOrigin: string | undefined,
+      callback: (error: Error | null, allow?: boolean) => void,
+    ) => {
       if (!requestOrigin) {
         callback(null, true);
         return;

@@ -49,8 +49,11 @@ export class NestCronJobOrchestrator implements JobOrchestrator {
     }
   }
 
-  async stop(): Promise<void> {
+  // Declared as returning a promise to satisfy the orchestrator contract,
+  // but Nest's scheduler owns the timers, so there is nothing to await here.
+  stop(): Promise<void> {
     this.logger.log('Nest cron job orchestrator shutdown requested.');
+    return Promise.resolve();
   }
 
   @Cron(CronExpression.EVERY_MINUTE)
@@ -106,10 +109,7 @@ export class NestCronJobOrchestrator implements JobOrchestrator {
     const jobId = buildIngestionPollJobId(configuration.sourceName);
     const existingJob = await this.jobQueue.getJob(INGESTION_QUEUE_NAME, jobId);
 
-    if (
-      existingJob &&
-      this.isIngestionJobPending(existingJob.status)
-    ) {
+    if (existingJob && this.isIngestionJobPending(existingJob.status)) {
       this.logger.log(
         `Ingestion job already scheduled for source "${configuration.sourceName}" (jobId=${jobId}, status=${existingJob.status}).`,
       );
@@ -149,8 +149,7 @@ export class NestCronJobOrchestrator implements JobOrchestrator {
       return true;
     }
 
-    const elapsedMilliseconds =
-      now.getTime() - this.lastTriggeredAt.getTime();
+    const elapsedMilliseconds = now.getTime() - this.lastTriggeredAt.getTime();
     const requiredMilliseconds = configuration.intervalMinutes * 60 * 1000;
 
     return elapsedMilliseconds >= requiredMilliseconds;

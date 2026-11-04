@@ -1,8 +1,4 @@
-import {
-  BadGatewayException,
-  BadRequestException,
-  NotFoundException,
-} from '@nestjs/common';
+import { BadGatewayException, NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { validate } from 'class-validator';
 
@@ -81,9 +77,13 @@ describe('FraudConfigService', () => {
   });
 
   it('propagates NotFoundException for missing rules', async () => {
-    fraudClient.get.mockRejectedValueOnce(new NotFoundException('Resource not found.'));
+    fraudClient.get.mockRejectedValueOnce(
+      new NotFoundException('Resource not found.'),
+    );
 
-    await expect(service.getRule('999')).rejects.toBeInstanceOf(NotFoundException);
+    await expect(service.getRule('999')).rejects.toBeInstanceOf(
+      NotFoundException,
+    );
   });
 
   it('propagates BadGatewayException for unexpected upstream failures', async () => {
@@ -91,7 +91,9 @@ describe('FraudConfigService', () => {
       new BadGatewayException('Fraud service returned an unexpected error.'),
     );
 
-    await expect(service.getRules()).rejects.toBeInstanceOf(BadGatewayException);
+    await expect(service.getRules()).rejects.toBeInstanceOf(
+      BadGatewayException,
+    );
   });
 });
 
