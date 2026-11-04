@@ -4,7 +4,7 @@ import { Background } from "@vue-flow/background";
 import { Controls } from "@vue-flow/controls";
 import { MiniMap } from "@vue-flow/minimap";
 import type { Edge, Node } from "@vue-flow/core";
-import { markRaw, nextTick, ref, watch } from "vue";
+import { markRaw, nextTick, shallowRef, watch } from "vue";
 import FraudGraphNode from "./FraudGraphNode.vue";
 import type { FraudFlowNodeData } from "../../../application/mappers/graphMapper";
 
@@ -20,8 +20,15 @@ const emit = defineEmits<{
 const nodeTypes = { fraud: markRaw(FraudGraphNode) };
 const { fitView } = useVueFlow();
 
-const flowNodes = ref<Node<FraudFlowNodeData>[]>([]);
-const flowEdges = ref<Edge[]>([]);
+/*
+ * shallowRef rather than ref. Vue Flow's Node and Edge types are deeply
+ * generic and self-referential, and a deep ref makes TypeScript give up
+ * unwrapping them (TS2589). Both watchers below replace the whole array, and
+ * Vue Flow keeps its own reactive copy of what it is given, so per-property
+ * reactivity here would only duplicate that work.
+ */
+const flowNodes = shallowRef<Node<FraudFlowNodeData>[]>([]);
+const flowEdges = shallowRef<Edge[]>([]);
 
 watch(
   () => props.nodes,
