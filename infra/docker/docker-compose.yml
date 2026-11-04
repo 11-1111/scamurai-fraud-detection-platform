@@ -1,0 +1,279 @@
+# Scamurai: the whole platform, from a clean checkout.
+#
+#   cp infra/docker/.env.example infra/docker/.env
+#   npm run up            # or: docker compose -f infra/docker/docker-compose.yml up -d --build
+#   npm run up:seed       # the same, plus 100k synthetic transactions
+#
+# Ordering is expressed as health and completion conditions rather than as
+# sleeps: the datastores must report healthy before migrations run, and
+# migrations must exit successfully before any application starts. An app that
+# boots against a half-built schema fails in ways that look like application
+# bugs.
+
+name: scamurai
+
+services:
+  # ---------------------------------------------------------------
+  # Datastores
+  # ---------------------------------------------------------------
+
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: scamurai-sqlserver
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: ${MSSQL_SA_PASSWORD:?set MSSQL_SA_PASSWORD in infra/docker/.env}
+      MSSQL_PID: Developer
+    ports:
+      - "${SQLSERVER_PORT:-1433}:1433"
+    volumes:
+      - sqlserver-data:/var/opt/mssql
+    healthcheck:
+      # sqlcmd 18 defaults to encrypting and verifying, so -C trusts the
+      # container's self-signed certificate.
+      test:
+        [
+          "CMD-SHELL",
+          "/opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P \"$$MSSQL_SA_PASSWORD\" -Q 'SELECT 1' -b -o /dev/null",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+      start_period: 45s
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    container_name: scamurai-redis
+    command:
+      [
+        "redis-server",
+        "--requirepass",
+        "${REDIS_PASSWORD:?set REDIS_PASSWORD in infra/docker/.env}",
+        "--appendonly",
+        "yes",
+      ]
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli -a \"$$REDIS_PASSWORD\" ping | grep -q PONG"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+      start_period: 10s
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+    restart: unless-stopped
+
+  neo4j:
+    image: neo4j:5-community
+    container_name: scamurai-neo4j
+    environment:
+      NEO4J_AUTH: neo4j/${NEO4J_PASSWORD:?set NEO4J_PASSWORD in infra/docker/.env}
+      # The identifier graph is small but traversal-heavy; the page cache is
+      # what keeps a multi-hop query off disk.
+      NEO4J_server_memory_pagecache_size: 512M
+      NEO4J_server_memory_heap_initial__size: 512M
+      NEO4J_server_memory_heap_max__size: 1G
+    ports:
+      - "${NEO4J_HTTP_PORT:-7474}:7474"
+      - "${NEO4J_BOLT_PORT:-7687}:7687"
+    volumes:
+      - neo4j-data:/data
+      - neo4j-logs:/logs
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "cypher-shell -u neo4j -p \"$${NEO4J_AUTH#neo4j/}\" 'RETURN 1' > /dev/null 2>&1",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+      start_period: 30s
+    restart: unless-stopped
+
+  # ---------------------------------------------------------------
+  # Schema
+  #
+  # Runs to completion and exits. Everything downstream waits on its exit
+  # code, so a failed migration stops the stack instead of letting the
+  # applications start against a schema that is not there.
+  # ---------------------------------------------------------------
+
+  db-migrate:
+    build:
+      context: ../..
+      dockerfile: apps/fraud-engine/Dockerfile
+      target: migrate
+    container_name: scamurai-db-migrate
+    environment:
+      # sa is used only to create the databases and apply DDL. The
+      # applications below connect with their own credentials; see
+      # infra/database/README.md for the least-privilege logins to use on a
+      # real server.
+      DB_ADMIN_USERNAME: sa
+      DB_ADMIN_PASSWORD: ${MSSQL_SA_PASSWORD}
+
+      SOURCE_DB_HOST: sqlserver
+      SOURCE_DB_PORT: "1433"
+      SOURCE_DB_NAME: ${SOURCE_DB_NAME:-TransactionsDb}
+      SOURCE_DB_USERNAME: sa
+      SOURCE_DB_PASSWORD: ${MSSQL_SA_PASSWORD}
+
+      FRAUD_DB_HOST: sqlserver
+      FRAUD_DB_PORT: "1433"
+      FRAUD_DB_NAME: ${FRAUD_DB_NAME:-FraudDb}
+      FRAUD_DB_USERNAME: sa
+      FRAUD_DB_PASSWORD: ${MSSQL_SA_PASSWORD}
+
+      NEO4J_URI: bolt://neo4j:7687
+      NEO4J_USER: neo4j
+      NEO4J_PASSWORD: ${NEO4J_PASSWORD}
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+      neo4j:
+        condition: service_healthy
+    restart: "no"
+
+  # ---------------------------------------------------------------
+  # Synthetic data. Opt in: docker compose --profile seed up
+  # ---------------------------------------------------------------
+
+  db-seed:
+    build:
+      context: ../..
+      dockerfile: apps/fraud-engine/Dockerfile
+      target: migrate
+    container_name: scamurai-db-seed
+    profiles: ["seed"]
+    command:
+      [
+        "npm",
+        "run",
+        "db:seed",
+        "--workspace",
+        "apps/fraud-engine",
+        "--",
+        "--count",
+        "${SEED_COUNT:-100000}",
+        "--days",
+        "${SEED_DAYS:-30}",
+      ]
+    environment:
+      SOURCE_DB_HOST: sqlserver
+      SOURCE_DB_PORT: "1433"
+      SOURCE_DB_NAME: ${SOURCE_DB_NAME:-TransactionsDb}
+      SOURCE_DB_USERNAME: sa
+      SOURCE_DB_PASSWORD: ${MSSQL_SA_PASSWORD}
+    depends_on:
+      db-migrate:
+        condition: service_completed_successfully
+    restart: "no"
+
+  # ---------------------------------------------------------------
+  # Applications
+  # ---------------------------------------------------------------
+
+  transactions-api:
+    build:
+      context: ../../apps/transactions-api
+      dockerfile: Dockerfile
+    container_name: scamurai-transactions-api
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ConnectionStrings__DefaultConnection: >-
+        Server=sqlserver,1433;Database=${SOURCE_DB_NAME:-TransactionsDb};
+        User Id=sa;Password=${MSSQL_SA_PASSWORD};
+        TrustServerCertificate=True;Encrypt=False
+    ports:
+      - "${TRANSACTIONS_API_PORT:-5289}:8080"
+    depends_on:
+      db-migrate:
+        condition: service_completed_successfully
+    restart: unless-stopped
+
+  fraud-engine:
+    build:
+      context: ../..
+      dockerfile: apps/fraud-engine/Dockerfile
+      target: runtime
+    container_name: scamurai-fraud-engine
+    environment:
+      NODE_ENV: production
+      PORT: "4000"
+
+      SOURCE_DB_HOST: sqlserver
+      SOURCE_DB_PORT: "1433"
+      SOURCE_DB_NAME: ${SOURCE_DB_NAME:-TransactionsDb}
+      SOURCE_DB_USERNAME: sa
+      SOURCE_DB_PASSWORD: ${MSSQL_SA_PASSWORD}
+
+      FRAUD_DB_HOST: sqlserver
+      FRAUD_DB_PORT: "1433"
+      FRAUD_DB_NAME: ${FRAUD_DB_NAME:-FraudDb}
+      FRAUD_DB_USERNAME: sa
+      FRAUD_DB_PASSWORD: ${MSSQL_SA_PASSWORD}
+
+      REDIS_HOST: redis
+      REDIS_PORT: "6379"
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+
+      NEO4J_URI: bolt://neo4j:7687
+      NEO4J_USER: neo4j
+      NEO4J_PASSWORD: ${NEO4J_PASSWORD}
+    ports:
+      - "${FRAUD_ENGINE_PORT:-4000}:4000"
+    depends_on:
+      db-migrate:
+        condition: service_completed_successfully
+      redis:
+        condition: service_healthy
+      neo4j:
+        condition: service_healthy
+    restart: unless-stopped
+
+  bff:
+    build:
+      context: ../..
+      dockerfile: apps/bff/Dockerfile
+    container_name: scamurai-bff
+    environment:
+      NODE_ENV: production
+      PORT: "3000"
+      FRAUD_SERVICE_BASE_URL: http://fraud-engine:4000
+      FRAUD_SERVICE_TIMEOUT_MS: "30000"
+      # The browser reaches the frontend through the published port, so that
+      # is the origin the BFF has to allow.
+      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:-http://localhost:8080,http://127.0.0.1:8080}
+    ports:
+      - "${BFF_PORT:-3000}:3000"
+    depends_on:
+      fraud-engine:
+        condition: service_healthy
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ../..
+      dockerfile: apps/frontend/Dockerfile
+      args:
+        # Vite inlines this at build time, so changing it means a rebuild.
+        # It is the URL the browser uses, not one on the compose network.
+        VITE_API_BASE_URL: ${VITE_API_BASE_URL:-http://localhost:3000}
+    container_name: scamurai-frontend
+    ports:
+      - "${FRONTEND_PORT:-8080}:8080"
+    depends_on:
+      bff:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  sqlserver-data:
+  redis-data:
+  neo4j-data:
+  neo4j-logs:
