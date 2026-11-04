@@ -11,9 +11,7 @@ import {
 } from '../feature-utils.service';
 
 @Injectable()
-export class MerchantDistinctCardsLast15MinutesFeature
-  implements FeatureCalculator
-{
+export class MerchantDistinctCardsLast15MinutesFeature implements FeatureCalculator {
   readonly featureName = 'merchantDistinctCardsLast15Minutes';
   readonly label = 'Distinct cards per merchant in last 15 minutes';
   readonly description = 'Detect card testing at one merchant.';

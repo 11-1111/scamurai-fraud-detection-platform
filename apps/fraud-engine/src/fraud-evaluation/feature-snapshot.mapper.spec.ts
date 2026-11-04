@@ -8,11 +8,13 @@ import {
 
 describe('feature-snapshot.mapper', () => {
   const baseFeature = (
-    overrides: Partial<CalculatedFeature> & Pick<CalculatedFeature, 'name' | 'value'>,
+    overrides: Partial<CalculatedFeature> &
+      Pick<CalculatedFeature, 'name' | 'value'>,
   ): CalculatedFeature => ({
     label: overrides.label ?? overrides.name,
     category: overrides.category ?? 'General',
-    calculatedAt: overrides.calculatedAt ?? new Date('2026-07-27T00:00:00.000Z'),
+    calculatedAt:
+      overrides.calculatedAt ?? new Date('2026-07-27T00:00:00.000Z'),
     ...overrides,
   });
 

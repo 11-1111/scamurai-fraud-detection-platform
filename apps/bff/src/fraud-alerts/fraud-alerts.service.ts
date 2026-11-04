@@ -4,17 +4,12 @@ import { FraudServiceClient } from '../fraud/infrastructure/fraud-service.client
 import {
   FraudAlertDetailResponseDto,
   FraudAlertsListResponseDto,
-  FraudIngestionSyncResponseDto,
 } from '../fraud/dto/fraud.dto';
 import {
   UpstreamFraudAlertDetail,
   UpstreamFraudAlertsListResponse,
-  UpstreamIngestionSyncResponse,
 } from '../fraud/dto/upstream-fraud.types';
-import {
-  mapAlertDetail,
-  mapAlertsList,
-} from '../fraud/mappers/fraud.mapper';
+import { mapAlertDetail, mapAlertsList } from '../fraud/mappers/fraud.mapper';
 import { QueryAlertsDto } from '../fraud-alerts/dto/query-alerts.dto';
 import { AssignAlertDto } from '../fraud-alerts/dto/assign-alert.dto';
 import { UpdateStatusDto } from '../fraud-alerts/dto/update-status.dto';
@@ -26,10 +21,11 @@ export class FraudAlertsService {
   constructor(private readonly fraudClient: FraudServiceClient) {}
 
   async getAlerts(query: QueryAlertsDto): Promise<FraudAlertsListResponseDto> {
-    const upstream = await this.fraudClient.get<UpstreamFraudAlertsListResponse>(
-      '/fraud/alerts',
-      { params: this.toQueryParams(query) },
-    );
+    const upstream =
+      await this.fraudClient.get<UpstreamFraudAlertsListResponse>(
+        '/fraud/alerts',
+        { params: this.toQueryParams(query) },
+      );
     return mapAlertsList(upstream);
   }
 
@@ -80,7 +76,9 @@ export class FraudAlertsService {
 
   private toQueryParams(query: QueryAlertsDto): Record<string, unknown> {
     return Object.fromEntries(
-      Object.entries(query).filter(([, value]) => value != null && value !== ''),
+      Object.entries(query).filter(
+        ([, value]) => value != null && value !== '',
+      ),
     );
   }
 }

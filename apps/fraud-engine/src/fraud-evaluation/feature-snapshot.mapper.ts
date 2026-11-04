@@ -1,6 +1,9 @@
 import { BadRequestException } from '@nestjs/common';
 import { FraudFeatureValueType } from '../database/entities/fraud-transaction-feature.entity';
-import { CalculatedFeature, FraudFeatureValue } from '../fraud/types/fraud.types';
+import {
+  CalculatedFeature,
+  FraudFeatureValue,
+} from '../fraud/types/fraud.types';
 
 export interface ConvertedFeatureValue {
   valueType: FraudFeatureValueType;

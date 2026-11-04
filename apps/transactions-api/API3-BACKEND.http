@@ -1,6 +1,13 @@
 @API3_BACKEND_HostAddress = http://localhost:5289
 
-GET {{API3_BACKEND_HostAddress}}/weatherforecast/
+### Search transactions
+GET {{API3_BACKEND_HostAddress}}/api/transactions/search?page=1&pageSize=25
+Accept: application/json
+
+###
+
+### Search by merchant within a date range
+GET {{API3_BACKEND_HostAddress}}/api/transactions/search?page=1&pageSize=25&merchant=Savanna&from=2026-10-01&to=2026-11-01
 Accept: application/json
 
 ###

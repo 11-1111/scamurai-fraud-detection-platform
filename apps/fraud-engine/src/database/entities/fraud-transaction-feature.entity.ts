@@ -27,9 +27,13 @@ export class FraudTransactionFeatureEntity {
   @Column('uniqueidentifier', { name: 'evaluation_id' })
   evaluationId: string;
 
-  @ManyToOne(() => FraudTransactionEvaluationEntity, (evaluation) => evaluation.features, {
-    nullable: false,
-  })
+  @ManyToOne(
+    () => FraudTransactionEvaluationEntity,
+    (evaluation) => evaluation.features,
+    {
+      nullable: false,
+    },
+  )
   @JoinColumn({ name: 'evaluation_id' })
   evaluation: FraudTransactionEvaluationEntity;
 
@@ -43,7 +47,12 @@ export class FraudTransactionFeatureEntity {
   @Column({ name: 'feature_name', type: 'nvarchar', length: 150 })
   featureName: string;
 
-  @Column({ name: 'feature_label', type: 'nvarchar', length: 200, nullable: true })
+  @Column({
+    name: 'feature_label',
+    type: 'nvarchar',
+    length: 200,
+    nullable: true,
+  })
   featureLabel?: string;
 
   @Column({
@@ -84,7 +93,12 @@ export class FraudTransactionFeatureEntity {
   })
   stringValue?: string;
 
-  @Column({ name: 'json_value', type: 'nvarchar', length: 'MAX', nullable: true })
+  @Column({
+    name: 'json_value',
+    type: 'nvarchar',
+    length: 'MAX',
+    nullable: true,
+  })
   jsonValue?: string;
 
   @Column({ type: 'nvarchar', length: 50, nullable: true })

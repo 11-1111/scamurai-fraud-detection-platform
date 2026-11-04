@@ -11,9 +11,7 @@ import {
 } from '../feature-utils.service';
 
 @Injectable()
-export class MerchantTodayTotalToAverageDaily7dRatioFeature
-  implements FeatureCalculator
-{
+export class MerchantTodayTotalToAverageDaily7dRatioFeature implements FeatureCalculator {
   readonly featureName = 'merchantTodayTotalToAverageDaily7dRatio';
   readonly label = 'Merchant today total to 7-day daily average ratio';
   readonly description =

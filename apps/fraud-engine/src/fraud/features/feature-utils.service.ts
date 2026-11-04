@@ -207,9 +207,14 @@ export class FeatureUtilsService {
         'tx.amount_value AS amountValue',
       ])
       .where(`tx.${column} = :value`, { value })
-      .andWhere('tx.transaction_date >= :fromDate', { fromDate: previousStartDate })
+      .andWhere('tx.transaction_date >= :fromDate', {
+        fromDate: previousStartDate,
+      })
       .andWhere('tx.transaction_date < :toDate', { toDate: previousEndDate })
-      .getRawMany<{ transactionDate: Date | string; amountValue: string | number }>();
+      .getRawMany<{
+        transactionDate: Date | string;
+        amountValue: string | number;
+      }>();
 
     if (rows.length === 0) {
       return 0;
@@ -266,10 +271,7 @@ export class FeatureUtilsService {
     // have one successful transaction, so no window filter is applied.
     const qb = this.fraudTransactionRepo
       .createQueryBuilder('tx')
-      .select([
-        'tx.status_text AS statusText',
-        'tx.status_type AS statusType',
-      ])
+      .select(['tx.status_text AS statusText', 'tx.status_type AS statusType'])
       .where('tx.order_tracking_id = :orderTrackingId', { orderTrackingId });
 
     if (excludeTransactionId) {

@@ -14,7 +14,8 @@ export class RiskScoreEngine {
       0,
     );
     const riskScore = Math.min(100, total);
-    const classification = await this.riskClassificationEngine.classify(riskScore);
+    const classification =
+      await this.riskClassificationEngine.classify(riskScore);
 
     return {
       riskScore,

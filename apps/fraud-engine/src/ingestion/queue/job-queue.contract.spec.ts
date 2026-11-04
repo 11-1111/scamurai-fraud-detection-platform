@@ -45,11 +45,7 @@ describe('Job queue contracts', () => {
       cancelJob: jest.fn(async () => true),
     };
 
-    await queue.enqueue(
-      INGESTION_QUEUE_NAME,
-      INGESTION_POLL_JOB,
-      pollPayload,
-    );
+    await queue.enqueue(INGESTION_QUEUE_NAME, INGESTION_POLL_JOB, pollPayload);
     await queue.enqueue(
       INGESTION_QUEUE_NAME,
       INGESTION_PROCESS_TRANSACTION_JOB,
@@ -74,12 +70,14 @@ describe('Job queue contracts', () => {
   });
 
   it('defines processor contracts without infrastructure types', () => {
-    const processor: JobQueueProcessor<IngestionProcessTransactionPayload, void> =
-      {
-        process: async (context) => {
-          expect(context.payload.transactionId).toBeDefined();
-        },
-      };
+    const processor: JobQueueProcessor<
+      IngestionProcessTransactionPayload,
+      void
+    > = {
+      process: async (context) => {
+        expect(context.payload.transactionId).toBeDefined();
+      },
+    };
 
     expect(typeof processor.process).toBe('function');
   });
@@ -118,7 +116,10 @@ describe('Job queue contracts', () => {
         continue;
       }
 
-      const contents = fs.readFileSync(path.join(queueDirectory, fileName), 'utf8');
+      const contents = fs.readFileSync(
+        path.join(queueDirectory, fileName),
+        'utf8',
+      );
 
       for (const pattern of forbiddenPatterns) {
         expect(contents).not.toMatch(pattern);

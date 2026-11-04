@@ -8,9 +8,7 @@ import { FeatureContext } from '../feature-context';
 import { FeatureUtilsService } from '../feature-utils.service';
 
 @Injectable()
-export class AccountCurrentAmountToAverage30dRatioFeature
-  implements FeatureCalculator
-{
+export class AccountCurrentAmountToAverage30dRatioFeature implements FeatureCalculator {
   readonly featureName = 'accountCurrentAmountToAverage30dRatio';
   readonly label = 'Current amount to 30-day account average ratio';
   readonly description =
@@ -35,14 +33,13 @@ export class AccountCurrentAmountToAverage30dRatioFeature
     }
 
     const referenceDate = this.utils.normalizeDate(transaction.transactionDate);
-    const historicalAverage =
-      await this.utils.getAverageAmountForFieldLastDays(
-        'paymentAccount',
-        paymentAccount,
-        referenceDate,
-        30,
-        transaction.id,
-      );
+    const historicalAverage = await this.utils.getAverageAmountForFieldLastDays(
+      'paymentAccount',
+      paymentAccount,
+      referenceDate,
+      30,
+      transaction.id,
+    );
 
     if (!historicalAverage) {
       return 0;

@@ -51,7 +51,9 @@ export class IngestionWorker
     }
   }
 
-  private async processPollJob(_payload: IngestionPollPayload): Promise<unknown> {
+  private async processPollJob(
+    _payload: IngestionPollPayload,
+  ): Promise<unknown> {
     return this.ingestionService.runScheduledSync();
   }
 

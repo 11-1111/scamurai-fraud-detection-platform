@@ -5,7 +5,11 @@ import { FraudAlertHistoryEntity } from '../../database/entities/fraud-alert-his
 import { FraudAlertPolicyActionEntity } from '../../database/entities/fraud-alert-policy-action.entity';
 import { FraudAlertTriggeredRuleEntity } from '../../database/entities/fraud-alert-triggered-rule.entity';
 import { FraudAlertEntity } from '../../database/entities/fraud-alert.entity';
-import { FraudFeatures, PolicyAction, TriggeredRule } from '../types/fraud.types';
+import {
+  FraudFeatures,
+  PolicyAction,
+  TriggeredRule,
+} from '../types/fraud.types';
 
 @Injectable()
 export class AlertEngine {
@@ -137,7 +141,13 @@ export class AlertEngine {
     policyActions: PolicyAction[];
   }): boolean {
     const finalDecision = input.finalDecision.toUpperCase();
-    const alertDecisions = ['MANUAL_REVIEW', 'REVIEW', 'BLOCK', 'HOLD', 'ESCALATE'];
+    const alertDecisions = [
+      'MANUAL_REVIEW',
+      'REVIEW',
+      'BLOCK',
+      'HOLD',
+      'ESCALATE',
+    ];
     if (alertDecisions.includes(finalDecision)) {
       return true;
     }
@@ -175,7 +185,9 @@ export class AlertEngine {
             { rootIdentifierType, rootIdentifierValue },
           );
           if (transactionId) {
-            qb.orWhere('alert.transaction_id = :transactionId', { transactionId });
+            qb.orWhere('alert.transaction_id = :transactionId', {
+              transactionId,
+            });
           }
         }),
       )
@@ -184,7 +196,9 @@ export class AlertEngine {
     return query.getOne();
   }
 
-  private getHighestSeverity(triggeredRules: TriggeredRule[]): string | undefined {
+  private getHighestSeverity(
+    triggeredRules: TriggeredRule[],
+  ): string | undefined {
     if (triggeredRules.length === 0) {
       return undefined;
     }

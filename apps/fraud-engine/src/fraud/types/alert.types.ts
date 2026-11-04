@@ -1,10 +1,5 @@
 export type AlertStatus =
-  | 'OPEN'
-  | 'ASSIGNED'
-  | 'UNDER_REVIEW'
-  | 'RESOLVED'
-  | 'CLOSED'
-  | 'DISMISSED';
+  'OPEN' | 'ASSIGNED' | 'UNDER_REVIEW' | 'RESOLVED' | 'CLOSED' | 'DISMISSED';
 
 export type AlertResolution =
   | 'CONFIRMED_FRAUD'

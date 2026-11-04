@@ -64,11 +64,15 @@ describe('bullmq-job.mapper', () => {
     expect(mapBullMqStateToJobQueueStatus('delayed')).toBe(
       JobQueueStatus.DELAYED,
     );
-    expect(mapBullMqStateToJobQueueStatus('active')).toBe(JobQueueStatus.ACTIVE);
+    expect(mapBullMqStateToJobQueueStatus('active')).toBe(
+      JobQueueStatus.ACTIVE,
+    );
     expect(mapBullMqStateToJobQueueStatus('completed')).toBe(
       JobQueueStatus.COMPLETED,
     );
-    expect(mapBullMqStateToJobQueueStatus('failed')).toBe(JobQueueStatus.FAILED);
+    expect(mapBullMqStateToJobQueueStatus('failed')).toBe(
+      JobQueueStatus.FAILED,
+    );
     expect(mapBullMqStateToJobQueueStatus('unknown-state')).toBe(
       JobQueueStatus.UNKNOWN,
     );

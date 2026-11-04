@@ -15,10 +15,7 @@ import { buildFraudSummaryFromProfile } from '../fraud/mappers/fraud-summary.map
 import { mapBackendTransactions } from './mappers/transaction.mapper';
 import { BackendResponse, BackendTransaction } from './types/backend.types';
 import { TransactionsResponseDto } from './dto/transactions-response.dto';
-import {
-  CorrelatedIdentifier,
-  PageCorrelations,
-} from './dto/correlation.dto';
+import { CorrelatedIdentifier, PageCorrelations } from './dto/correlation.dto';
 import {
   FraudProfile,
   FraudRelatedIdentifiers,
@@ -73,7 +70,10 @@ export class TransactionsService {
   ): FraudIdentifier | null {
     for (const [param, type] of this.identifierQueryMap) {
       const raw = query[param];
-      if (raw == null) continue;
+      // Express can hand back an array or a nested object for a repeated or
+      // bracketed query parameter. Stringifying either yields nonsense like
+      // "[object Object]", so only primitives are treated as identifiers.
+      if (typeof raw !== 'string' && typeof raw !== 'number') continue;
       const value = String(raw).trim();
       if (!value) continue;
       return { type, value };
@@ -86,11 +86,9 @@ export class TransactionsService {
 
     const data = input as Record<string, unknown>;
     const related = data.relatedIdentifiers as
-      | Partial<FraudRelatedIdentifiers>
-      | undefined;
+      Partial<FraudRelatedIdentifiers> | undefined;
     const graph = data.graph as
-      | { nodes?: unknown[]; edges?: unknown[] }
-      | undefined;
+      { nodes?: unknown[]; edges?: unknown[] } | undefined;
 
     return {
       scope: (data.scope as string) ?? 'GLOBAL',
@@ -107,7 +105,8 @@ export class TransactionsService {
         (data.defaultDecision as string) ??
         'ALLOW',
       displayColor: data.displayColor as string | undefined,
-      policyActions: (data.policyActions as FraudProfile['policyActions']) ?? [],
+      policyActions:
+        (data.policyActions as FraudProfile['policyActions']) ?? [],
       relatedIdentifiers: {
         emails: related?.emails ?? [],
         phones: related?.phones ?? [],
@@ -163,14 +162,11 @@ export class TransactionsService {
 
     try {
       const backendResponse = await firstValueFrom(
-        this.http.get<BackendResponse>(
-          `${BACKEND_CONFIG.BASE_URL}${path}`,
-          {
-            params: query,
-            httpsAgent: new https.Agent({ rejectUnauthorized: false }),
-            timeout: 60_000,
-          },
-        ),
+        this.http.get<BackendResponse>(`${BACKEND_CONFIG.BASE_URL}${path}`, {
+          params: query,
+          httpsAgent: new https.Agent({ rejectUnauthorized: false }),
+          timeout: 60_000,
+        }),
       );
 
       this.logger.log(
@@ -236,7 +232,9 @@ export class TransactionsService {
     const page = Number(query.page ?? query.Page ?? 1);
     const pageSize = Number(query.pageSize ?? query.PageSize ?? 20);
 
-    const transactions = mapBackendTransactions(backendResponse.transactions ?? []);
+    const transactions = mapBackendTransactions(
+      backendResponse.transactions ?? [],
+    );
 
     const pageCorrelations: PageCorrelations = {
       scope: 'CURRENT_PAGE',

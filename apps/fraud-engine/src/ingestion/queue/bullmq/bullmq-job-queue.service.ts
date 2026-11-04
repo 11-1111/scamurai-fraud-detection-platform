@@ -1,8 +1,5 @@
 import { Inject, Injectable, OnModuleDestroy } from '@nestjs/common';
-import {
-  Queue,
-  QueueEvents,
-} from 'bullmq';
+import { Queue, QueueEvents } from 'bullmq';
 import type { BullMqRedisConfig } from './bullmq.config';
 import type { JobQueue } from '../job-queue.interface';
 import type { JobQueueJob } from '../job-queue-job';

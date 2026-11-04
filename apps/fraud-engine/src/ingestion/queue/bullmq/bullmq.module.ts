@@ -1,7 +1,10 @@
 import { Module, forwardRef } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { BullModule } from '@nestjs/bullmq';
-import { getBullMqConnectionOptions, getBullMqRootOptions } from './bullmq.config';
+import {
+  getBullMqConnectionOptions,
+  getBullMqRootOptions,
+} from './bullmq.config';
 import { BULLMQ_CONNECTION } from './bullmq.constants';
 import { BullMqJobQueue } from './bullmq-job-queue.service';
 import { JOB_QUEUE } from '../job-queue.token';

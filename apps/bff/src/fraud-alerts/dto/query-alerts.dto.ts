@@ -1,10 +1,4 @@
-import {
-  IsInt,
-  IsOptional,
-  IsString,
-  Max,
-  Min,
-} from 'class-validator';
+import { IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
 import { Type } from 'class-transformer';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 
@@ -49,7 +43,10 @@ export class QueryAlertsDto {
   @IsString()
   assignedTo?: string;
 
-  @ApiPropertyOptional({ description: 'Root identifier type', example: 'email' })
+  @ApiPropertyOptional({
+    description: 'Root identifier type',
+    example: 'email',
+  })
   @IsOptional()
   @IsString()
   rootIdentifierType?: string;

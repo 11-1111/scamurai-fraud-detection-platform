@@ -1,0 +1,143 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  node:
+    name: Node apps (lint, test, build)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Unit tests
+        run: npm run test
+
+      - name: Build
+        run: npm run build
+
+  dotnet:
+    name: Transactions API (build)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+
+      - run: dotnet restore apps/transactions-api/API3-BACKEND.csproj
+
+      - name: Build
+        run: >-
+          dotnet build apps/transactions-api/API3-BACKEND.csproj
+          --configuration Release --no-restore
+
+  # The claim worth testing in CI is not that the code compiles but that the
+  # schema builds from nothing. This applies every migration to empty
+  # datastores, asserts the runner then reports no outstanding work, and
+  # seeds synthetic traffic through it -- which is also the only automated
+  # check that the planted rings still insert.
+  schema:
+    name: Schema from scratch
+    runs-on: ubuntu-latest
+
+    services:
+      sqlserver:
+        image: mcr.microsoft.com/mssql/server:2022-latest
+        env:
+          ACCEPT_EULA: "Y"
+          MSSQL_SA_PASSWORD: Scamurai_CI_2026!
+          MSSQL_PID: Developer
+        ports:
+          - 1433:1433
+        options: >-
+          --health-cmd "/opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P Scamurai_CI_2026! -Q 'SELECT 1' -b"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 20
+          --health-start-period 45s
+
+      neo4j:
+        image: neo4j:5-community
+        env:
+          NEO4J_AUTH: neo4j/scamurai_ci_neo4j
+        ports:
+          - 7687:7687
+          - 7474:7474
+        options: >-
+          --health-cmd "cypher-shell -u neo4j -p scamurai_ci_neo4j 'RETURN 1'"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 20
+          --health-start-period 30s
+
+    env:
+      DB_ADMIN_USERNAME: sa
+      DB_ADMIN_PASSWORD: Scamurai_CI_2026!
+
+      SOURCE_DB_HOST: 127.0.0.1
+      SOURCE_DB_PORT: "1433"
+      SOURCE_DB_NAME: TransactionsDb
+      SOURCE_DB_USERNAME: sa
+      SOURCE_DB_PASSWORD: Scamurai_CI_2026!
+
+      FRAUD_DB_HOST: 127.0.0.1
+      FRAUD_DB_PORT: "1433"
+      FRAUD_DB_NAME: FraudDb
+      FRAUD_DB_USERNAME: sa
+      FRAUD_DB_PASSWORD: Scamurai_CI_2026!
+
+      NEO4J_URI: bolt://127.0.0.1:7687
+      NEO4J_USER: neo4j
+      NEO4J_PASSWORD: scamurai_ci_neo4j
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Apply migrations
+        run: npm run db:migrate
+
+      - name: Re-running must be a no-op
+        run: npm run db:migrate:check
+
+      - name: Seed a small dataset
+        run: >-
+          npm run db:seed --workspace apps/fraud-engine --
+          --count 2000 --days 7
+
+  compose:
+    name: Compose file
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate
+        working-directory: infra/docker
+        run: |
+          cp .env.example .env
+          docker compose config --quiet

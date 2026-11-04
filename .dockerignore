@@ -1,0 +1,33 @@
+# The Node images build from the repository root, so keep the context small:
+# a stale node_modules or dist copied in would shadow the clean install the
+# Dockerfile performs.
+**/node_modules/
+**/dist/
+**/build/
+**/coverage/
+**/.vite/
+**/*.tsbuildinfo
+
+**/bin/
+**/obj/
+**/publish/
+
+.git/
+.github/
+.vs/
+.idea/
+.vscode/
+
+**/.env
+**/.env.*
+!**/.env.example
+
+docs/
+infra/apache/
+*.md
+!apps/*/README.md
+
+**/*.log
+*.zip
+*.tar
+*.tar.gz

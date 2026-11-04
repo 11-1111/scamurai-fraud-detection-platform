@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Node, Relationship } from 'neo4j-driver';
+import { Node, Path, Relationship } from 'neo4j-driver';
 import { Neo4jService } from '../../neo4j/neo4j.service';
 import { FraudGraph, GraphEdge, GraphNode } from '../types/fraud.types';
 
@@ -20,7 +20,11 @@ const GRAPH_LABEL_BY_IDENTIFIER_TYPE: Record<string, string | null> = {
 export class GraphEngine {
   constructor(private readonly neo4jService: Neo4jService) {}
 
-  async getNetwork(type: string, value: string, depth = 2): Promise<FraudGraph> {
+  async getNetwork(
+    type: string,
+    value: string,
+    depth = 2,
+  ): Promise<FraudGraph> {
     const label = GRAPH_LABEL_BY_IDENTIFIER_TYPE[type.trim().toLowerCase()];
     if (!label) {
       return { nodes: [], edges: [] };
@@ -45,7 +49,9 @@ export class GraphEngine {
     const edgeMap = new Map<string, GraphEdge>();
 
     for (const record of records) {
-      const path = record.get('path');
+      // record.get is untyped, so name the shape the query returns rather
+      // than letting an `any` spread through the traversal below.
+      const path = record.get('path') as Path | null;
       if (!path) {
         continue;
       }

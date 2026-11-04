@@ -157,9 +157,9 @@ describe('BullMqJobQueue', () => {
       remove,
     });
 
-    await expect(
-      jobQueue.cancelJob('fraud-ingestion', 'job-1'),
-    ).resolves.toBe(true);
+    await expect(jobQueue.cancelJob('fraud-ingestion', 'job-1')).resolves.toBe(
+      true,
+    );
 
     expect(remove).toHaveBeenCalledTimes(1);
   });

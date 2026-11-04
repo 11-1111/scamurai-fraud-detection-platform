@@ -1,10 +1,5 @@
 import { Controller, Get, Param, Patch, Post, Body } from '@nestjs/common';
-import {
-  ApiBody,
-  ApiOperation,
-  ApiParam,
-  ApiTags,
-} from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 
 import { FraudConfigService } from './fraud-config.service';
 import { CreateFraudRuleDto, UpdateFraudRuleDto } from './dto/create-rule.dto';

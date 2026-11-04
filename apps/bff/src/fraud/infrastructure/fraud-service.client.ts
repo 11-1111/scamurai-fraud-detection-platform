@@ -84,7 +84,12 @@ export class FraudServiceClient implements OnModuleInit {
       );
       return response.data;
     } catch (error) {
-      return this.handleError(method, normalizedPath, Date.now() - start, error);
+      return this.handleError(
+        method,
+        normalizedPath,
+        Date.now() - start,
+        error,
+      );
     }
   }
 
@@ -108,7 +113,11 @@ export class FraudServiceClient implements OnModuleInit {
         throw new ServiceUnavailableException('Fraud service unavailable.');
       }
 
-      const { status, data } = error.response;
+      // axios types response.data as `any`; the message extractor below
+      // already treats it as unknown, so say so here rather than letting an
+      // `any` leak out of the destructuring.
+      const { status } = error.response;
+      const data: unknown = error.response.data;
       const upstreamMessage = this.extractMessage(data);
 
       if (status === 404) {
@@ -119,7 +128,9 @@ export class FraudServiceClient implements OnModuleInit {
         throw new BadRequestException(upstreamMessage ?? 'Validation error.');
       }
 
-      throw new BadGatewayException('Fraud service returned an unexpected error.');
+      throw new BadGatewayException(
+        'Fraud service returned an unexpected error.',
+      );
     }
 
     throw new BadGatewayException('Fraud service unavailable.');

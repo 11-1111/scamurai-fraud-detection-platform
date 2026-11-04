@@ -55,7 +55,9 @@ describe('FraudConfigController', () => {
         new BadGatewayException('Fraud service unavailable.'),
       );
 
-      await expect(controller.getFeatures()).rejects.toBeInstanceOf(BadGatewayException);
+      await expect(controller.getFeatures()).rejects.toBeInstanceOf(
+        BadGatewayException,
+      );
     });
   });
 
@@ -74,7 +76,9 @@ describe('FraudConfigController', () => {
         new BadGatewayException('Fraud service unavailable.'),
       );
 
-      await expect(controller.getRules()).rejects.toBeInstanceOf(BadGatewayException);
+      await expect(controller.getRules()).rejects.toBeInstanceOf(
+        BadGatewayException,
+      );
     });
   });
 
@@ -90,9 +94,13 @@ describe('FraudConfigController', () => {
     });
 
     it('propagates NotFoundException (404)', async () => {
-      service.getRule.mockRejectedValueOnce(new NotFoundException('Resource not found.'));
+      service.getRule.mockRejectedValueOnce(
+        new NotFoundException('Resource not found.'),
+      );
 
-      await expect(controller.getRule('999')).rejects.toBeInstanceOf(NotFoundException);
+      await expect(controller.getRule('999')).rejects.toBeInstanceOf(
+        NotFoundException,
+      );
     });
 
     it('propagates BadGatewayException (502)', async () => {
@@ -100,7 +108,9 @@ describe('FraudConfigController', () => {
         new BadGatewayException('Fraud service unavailable.'),
       );
 
-      await expect(controller.getRule('42')).rejects.toBeInstanceOf(BadGatewayException);
+      await expect(controller.getRule('42')).rejects.toBeInstanceOf(
+        BadGatewayException,
+      );
     });
   });
 
@@ -121,7 +131,9 @@ describe('FraudConfigController', () => {
         new BadRequestException('ruleCode must not be empty'),
       );
 
-      await expect(controller.createRule({})).rejects.toBeInstanceOf(BadRequestException);
+      await expect(controller.createRule({})).rejects.toBeInstanceOf(
+        BadRequestException,
+      );
     });
 
     it('propagates BadGatewayException (502)', async () => {
@@ -129,7 +141,9 @@ describe('FraudConfigController', () => {
         new BadGatewayException('Fraud service unavailable.'),
       );
 
-      await expect(controller.createRule({})).rejects.toBeInstanceOf(BadGatewayException);
+      await expect(controller.createRule({})).rejects.toBeInstanceOf(
+        BadGatewayException,
+      );
     });
   });
 
@@ -146,9 +160,13 @@ describe('FraudConfigController', () => {
     });
 
     it('propagates NotFoundException (404)', async () => {
-      service.updateRule.mockRejectedValueOnce(new NotFoundException('Resource not found.'));
+      service.updateRule.mockRejectedValueOnce(
+        new NotFoundException('Resource not found.'),
+      );
 
-      await expect(controller.updateRule('999', {})).rejects.toBeInstanceOf(NotFoundException);
+      await expect(controller.updateRule('999', {})).rejects.toBeInstanceOf(
+        NotFoundException,
+      );
     });
 
     it('propagates BadRequestException when fraud service returns validation error', async () => {
@@ -156,9 +174,9 @@ describe('FraudConfigController', () => {
         new BadRequestException('scoreImpact must be a number'),
       );
 
-      await expect(controller.updateRule('42', { scoreImpact: 'bad' })).rejects.toBeInstanceOf(
-        BadRequestException,
-      );
+      await expect(
+        controller.updateRule('42', { scoreImpact: 'bad' }),
+      ).rejects.toBeInstanceOf(BadRequestException);
     });
 
     it('propagates BadGatewayException (502)', async () => {
@@ -166,7 +184,9 @@ describe('FraudConfigController', () => {
         new BadGatewayException('Fraud service unavailable.'),
       );
 
-      await expect(controller.updateRule('42', {})).rejects.toBeInstanceOf(BadGatewayException);
+      await expect(controller.updateRule('42', {})).rejects.toBeInstanceOf(
+        BadGatewayException,
+      );
     });
   });
 
@@ -182,9 +202,13 @@ describe('FraudConfigController', () => {
     });
 
     it('propagates NotFoundException (404)', async () => {
-      service.enableRule.mockRejectedValueOnce(new NotFoundException('Resource not found.'));
+      service.enableRule.mockRejectedValueOnce(
+        new NotFoundException('Resource not found.'),
+      );
 
-      await expect(controller.enableRule('999')).rejects.toBeInstanceOf(NotFoundException);
+      await expect(controller.enableRule('999')).rejects.toBeInstanceOf(
+        NotFoundException,
+      );
     });
 
     it('propagates BadGatewayException (502)', async () => {
@@ -192,7 +216,9 @@ describe('FraudConfigController', () => {
         new BadGatewayException('Fraud service unavailable.'),
       );
 
-      await expect(controller.enableRule('42')).rejects.toBeInstanceOf(BadGatewayException);
+      await expect(controller.enableRule('42')).rejects.toBeInstanceOf(
+        BadGatewayException,
+      );
     });
   });
 
@@ -208,9 +234,13 @@ describe('FraudConfigController', () => {
     });
 
     it('propagates NotFoundException (404)', async () => {
-      service.disableRule.mockRejectedValueOnce(new NotFoundException('Resource not found.'));
+      service.disableRule.mockRejectedValueOnce(
+        new NotFoundException('Resource not found.'),
+      );
 
-      await expect(controller.disableRule('999')).rejects.toBeInstanceOf(NotFoundException);
+      await expect(controller.disableRule('999')).rejects.toBeInstanceOf(
+        NotFoundException,
+      );
     });
 
     it('propagates BadGatewayException (502)', async () => {
@@ -218,7 +248,9 @@ describe('FraudConfigController', () => {
         new BadGatewayException('Fraud service unavailable.'),
       );
 
-      await expect(controller.disableRule('42')).rejects.toBeInstanceOf(BadGatewayException);
+      await expect(controller.disableRule('42')).rejects.toBeInstanceOf(
+        BadGatewayException,
+      );
     });
   });
 
@@ -237,7 +269,9 @@ describe('FraudConfigController', () => {
         new BadGatewayException('Fraud service unavailable.'),
       );
 
-      await expect(controller.getRiskLevels()).rejects.toBeInstanceOf(BadGatewayException);
+      await expect(controller.getRiskLevels()).rejects.toBeInstanceOf(
+        BadGatewayException,
+      );
     });
   });
 
@@ -256,7 +290,9 @@ describe('FraudConfigController', () => {
         new BadGatewayException('Fraud service unavailable.'),
       );
 
-      await expect(controller.getPolicies()).rejects.toBeInstanceOf(BadGatewayException);
+      await expect(controller.getPolicies()).rejects.toBeInstanceOf(
+        BadGatewayException,
+      );
     });
   });
 });

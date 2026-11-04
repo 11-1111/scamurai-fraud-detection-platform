@@ -120,28 +120,24 @@ export function mapAlertDetail(
     triggeredRules: (upstream.triggeredRules ?? []).map(mapTriggeredRule),
     policyActions: (upstream.policyActions ?? []).map(mapPolicyAction),
     reasons: upstream.reasons ?? [],
-    notes: (upstream.notes ?? []).map(
-      (note): FraudAlertNoteDto => ({
-        id: note.id,
-        note: note.note,
-        createdBy: note.createdBy ?? null,
-        createdAt: toUtcIsoString(note.createdAt) ?? '',
-      }),
-    ),
-    history: (upstream.history ?? []).map(
-      (item): FraudAlertHistoryItemDto => ({
-        id: item.id,
-        actionType: item.actionType,
-        previousStatus: item.previousStatus ?? null,
-        newStatus: item.newStatus ?? null,
-        previousAssignee: item.previousAssignee ?? null,
-        newAssignee: item.newAssignee ?? null,
-        resolution: item.resolution ?? null,
-        comment: item.comment ?? null,
-        performedBy: item.performedBy ?? null,
-        createdAt: toUtcIsoString(item.createdAt) ?? '',
-      }),
-    ),
+    notes: (upstream.notes ?? []).map((note): FraudAlertNoteDto => ({
+      id: note.id,
+      note: note.note,
+      createdBy: note.createdBy ?? null,
+      createdAt: toUtcIsoString(note.createdAt) ?? '',
+    })),
+    history: (upstream.history ?? []).map((item): FraudAlertHistoryItemDto => ({
+      id: item.id,
+      actionType: item.actionType,
+      previousStatus: item.previousStatus ?? null,
+      newStatus: item.newStatus ?? null,
+      previousAssignee: item.previousAssignee ?? null,
+      newAssignee: item.newAssignee ?? null,
+      resolution: item.resolution ?? null,
+      comment: item.comment ?? null,
+      performedBy: item.performedBy ?? null,
+      createdAt: toUtcIsoString(item.createdAt) ?? '',
+    })),
   };
 }
 
@@ -190,7 +186,9 @@ export function mapRule(upstream: UpstreamFraudRule): FraudRuleDto {
   };
 }
 
-export function mapRiskLevel(upstream: UpstreamFraudRiskLevel): FraudRiskLevelDto {
+export function mapRiskLevel(
+  upstream: UpstreamFraudRiskLevel,
+): FraudRiskLevelDto {
   return {
     id: upstream.id,
     code: upstream.levelCode ?? '',

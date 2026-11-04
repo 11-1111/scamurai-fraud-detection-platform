@@ -8,9 +8,7 @@ export interface BullMqRedisConfig {
   password?: string;
 }
 
-export function getBullMqRedisConfig(
-  config: ConfigService,
-): BullMqRedisConfig {
+export function getBullMqRedisConfig(config: ConfigService): BullMqRedisConfig {
   const host = config.getOrThrow<string>('REDIS_HOST');
   const port = Number(config.getOrThrow<string>('REDIS_PORT'));
 
@@ -25,9 +23,7 @@ export function getBullMqRedisConfig(
   };
 }
 
-export function getBullMqRootOptions(
-  config: ConfigService,
-): QueueOptions {
+export function getBullMqRootOptions(config: ConfigService): QueueOptions {
   const redis = getBullMqRedisConfig(config);
 
   return {

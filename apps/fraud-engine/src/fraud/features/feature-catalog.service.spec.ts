@@ -77,12 +77,14 @@ describe('FeatureCatalogService', () => {
   });
 
   it('includes all 12 expected advanced feature names when fully registered', () => {
-    const calculators = EXPECTED_ADVANCED_FEATURE_NAMES.map((featureName, index) =>
-      createCalculator(featureName, (index + 1) * 10),
+    const calculators = EXPECTED_ADVANCED_FEATURE_NAMES.map(
+      (featureName, index) => createCalculator(featureName, (index + 1) * 10),
     );
 
     const service = new FeatureCatalogService(calculators);
-    const names = service.getAvailableFeatures().map((entry) => entry.featureName);
+    const names = service
+      .getAvailableFeatures()
+      .map((entry) => entry.featureName);
 
     expect(names).toEqual(EXPECTED_ADVANCED_FEATURE_NAMES);
   });
