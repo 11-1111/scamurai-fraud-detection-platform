@@ -156,9 +156,14 @@ BEGIN
 END;
 GO
 
-/* Default configuration for the only source that exists today. */
+/*
+  Default configuration for the only source that exists today. The value must
+  match TRANSACTIONS_INGESTION_SOURCE in src/ingestion/ingestion.constants.ts
+  exactly: the orchestrator looks its configuration up by this string, and a
+  mismatch leaves polling permanently unconfigured.
+*/
 MERGE dbo.fraud_ingestion_config AS target
-USING (VALUES ('TransactionsDb')) AS src (source_name)
+USING (VALUES ('TransactionsDb.Transactions')) AS src (source_name)
   ON target.source_name = src.source_name
 WHEN NOT MATCHED THEN
   INSERT (source_name) VALUES (src.source_name);
