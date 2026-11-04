@@ -96,7 +96,9 @@ describe('FraudAlertsController', () => {
     });
 
     it('propagates NotFoundException from service (404)', async () => {
-      service.getAlert.mockRejectedValueOnce(new NotFoundException('Alert not found.'));
+      service.getAlert.mockRejectedValueOnce(
+        new NotFoundException('Alert not found.'),
+      );
 
       await expect(controller.getAlert('missing')).rejects.toBeInstanceOf(
         NotFoundException,
@@ -141,9 +143,9 @@ describe('FraudAlertsController', () => {
         new NotFoundException('Alert not found.'),
       );
 
-      await expect(controller.getAlertHistory('missing')).rejects.toBeInstanceOf(
-        NotFoundException,
-      );
+      await expect(
+        controller.getAlertHistory('missing'),
+      ).rejects.toBeInstanceOf(NotFoundException);
     });
 
     it('propagates BadGatewayException from service (502)', async () => {
@@ -151,9 +153,9 @@ describe('FraudAlertsController', () => {
         new BadGatewayException('Fraud service unavailable.'),
       );
 
-      await expect(controller.getAlertHistory('abc-123')).rejects.toBeInstanceOf(
-        BadGatewayException,
-      );
+      await expect(
+        controller.getAlertHistory('abc-123'),
+      ).rejects.toBeInstanceOf(BadGatewayException);
     });
   });
 
@@ -164,7 +166,9 @@ describe('FraudAlertsController', () => {
       const response = { id: 'abc-123', assignedTo: 'analyst@co.com' };
       service.assignAlert.mockResolvedValueOnce(response);
 
-      const result = await controller.assignAlert('abc-123', { assignedTo: 'analyst@co.com' });
+      const result = await controller.assignAlert('abc-123', {
+        assignedTo: 'analyst@co.com',
+      });
 
       expect(service.assignAlert).toHaveBeenCalledWith('abc-123', {
         assignedTo: 'analyst@co.com',
@@ -173,7 +177,9 @@ describe('FraudAlertsController', () => {
     });
 
     it('propagates NotFoundException from service (404)', async () => {
-      service.assignAlert.mockRejectedValueOnce(new NotFoundException('Alert not found.'));
+      service.assignAlert.mockRejectedValueOnce(
+        new NotFoundException('Alert not found.'),
+      );
 
       await expect(
         controller.assignAlert('missing', { assignedTo: 'x' }),
@@ -198,7 +204,9 @@ describe('FraudAlertsController', () => {
       const response = { id: 'abc-123', status: 'IN_REVIEW' };
       service.updateAlertStatus.mockResolvedValueOnce(response);
 
-      const result = await controller.updateStatus('abc-123', { status: 'IN_REVIEW' });
+      const result = await controller.updateStatus('abc-123', {
+        status: 'IN_REVIEW',
+      });
 
       expect(service.updateAlertStatus).toHaveBeenCalledWith('abc-123', {
         status: 'IN_REVIEW',
@@ -234,7 +242,11 @@ describe('FraudAlertsController', () => {
       const response = { id: 'abc-123', status: 'RESOLVED' };
       service.resolveAlert.mockResolvedValueOnce(response);
 
-      const body = { resolution: 'FALSE_POSITIVE', note: 'Verified safe', resolvedBy: 'analyst' };
+      const body = {
+        resolution: 'FALSE_POSITIVE',
+        note: 'Verified safe',
+        resolvedBy: 'analyst',
+      };
       const result = await controller.resolveAlert('abc-123', body);
 
       expect(service.resolveAlert).toHaveBeenCalledWith('abc-123', body);
@@ -245,14 +257,20 @@ describe('FraudAlertsController', () => {
       const response = { id: 'abc-123', status: 'RESOLVED' };
       service.resolveAlert.mockResolvedValueOnce(response);
 
-      const result = await controller.resolveAlert('abc-123', { resolution: 'CONFIRMED_FRAUD' });
+      const result = await controller.resolveAlert('abc-123', {
+        resolution: 'CONFIRMED_FRAUD',
+      });
 
-      expect(service.resolveAlert).toHaveBeenCalledWith('abc-123', { resolution: 'CONFIRMED_FRAUD' });
+      expect(service.resolveAlert).toHaveBeenCalledWith('abc-123', {
+        resolution: 'CONFIRMED_FRAUD',
+      });
       expect(result).toEqual(response);
     });
 
     it('propagates NotFoundException from service (404)', async () => {
-      service.resolveAlert.mockRejectedValueOnce(new NotFoundException('Alert not found.'));
+      service.resolveAlert.mockRejectedValueOnce(
+        new NotFoundException('Alert not found.'),
+      );
 
       await expect(
         controller.resolveAlert('missing', { resolution: 'FALSE_POSITIVE' }),
@@ -277,9 +295,13 @@ describe('FraudAlertsController', () => {
       const noteResponse = { id: 'n1', note: 'Confirmed fraud' };
       service.addNote.mockResolvedValueOnce(noteResponse);
 
-      const result = await controller.addNote('abc-123', { note: 'Confirmed fraud' });
+      const result = await controller.addNote('abc-123', {
+        note: 'Confirmed fraud',
+      });
 
-      expect(service.addNote).toHaveBeenCalledWith('abc-123', { note: 'Confirmed fraud' });
+      expect(service.addNote).toHaveBeenCalledWith('abc-123', {
+        note: 'Confirmed fraud',
+      });
       expect(result).toEqual(noteResponse);
     });
 
@@ -287,7 +309,10 @@ describe('FraudAlertsController', () => {
       const noteResponse = { id: 'n2', note: 'Verified', createdBy: 'analyst' };
       service.addNote.mockResolvedValueOnce(noteResponse);
 
-      const result = await controller.addNote('abc-123', { note: 'Verified', createdBy: 'analyst' });
+      const result = await controller.addNote('abc-123', {
+        note: 'Verified',
+        createdBy: 'analyst',
+      });
 
       expect(service.addNote).toHaveBeenCalledWith('abc-123', {
         note: 'Verified',
@@ -297,7 +322,9 @@ describe('FraudAlertsController', () => {
     });
 
     it('propagates NotFoundException from service (404)', async () => {
-      service.addNote.mockRejectedValueOnce(new NotFoundException('Alert not found.'));
+      service.addNote.mockRejectedValueOnce(
+        new NotFoundException('Alert not found.'),
+      );
 
       await expect(
         controller.addNote('missing', { note: 'note' }),

@@ -31,9 +31,9 @@ describe('toUtcIsoString', () => {
   });
 
   it('converts Date objects to ISO UTC', () => {
-    expect(
-      toUtcIsoString(new Date('2026-08-09T14:41:17.000Z')),
-    ).toBe('2026-08-09T14:41:17.000Z');
+    expect(toUtcIsoString(new Date('2026-08-09T14:41:17.000Z'))).toBe(
+      '2026-08-09T14:41:17.000Z',
+    );
   });
 
   it('returns null for invalid values', () => {

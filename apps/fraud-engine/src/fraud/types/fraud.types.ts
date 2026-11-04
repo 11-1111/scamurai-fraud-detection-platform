@@ -59,12 +59,7 @@ export interface TriggeredRule {
 }
 
 export type FraudFeatureValue =
-  | number
-  | boolean
-  | string
-  | Record<string, unknown>
-  | unknown[]
-  | null;
+  number | boolean | string | Record<string, unknown> | unknown[] | null;
 
 export interface CalculatedFeature {
   name: string;

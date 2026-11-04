@@ -12,10 +12,11 @@ import {
   FraudEvaluationStatus,
   FraudTransactionEvaluationEntity,
 } from '../database/entities/fraud-transaction-evaluation.entity';
+import { FraudTransactionFeatureEntity } from '../database/entities/fraud-transaction-feature.entity';
 import {
-  FraudTransactionFeatureEntity,
-} from '../database/entities/fraud-transaction-feature.entity';
-import { CalculatedFeature, FraudFeatureValue } from '../fraud/types/fraud.types';
+  CalculatedFeature,
+  FraudFeatureValue,
+} from '../fraud/types/fraud.types';
 import {
   assertUniqueFeatureNames,
   convertFraudFeatureValue,
@@ -253,7 +254,10 @@ export class FeatureSnapshotService {
         createdAt: now,
       });
 
-      const saved = await manager.save(FraudTransactionEvaluationEntity, evaluation);
+      const saved = await manager.save(
+        FraudTransactionEvaluationEntity,
+        evaluation,
+      );
 
       this.logger.log(
         `Started evaluation ${saved.id} for transaction ${saved.fraudTransactionId} version ${saved.evaluationVersion}`,
@@ -292,15 +296,15 @@ export class FeatureSnapshotService {
     }
 
     const driverError = error.driverError as
-      | { number?: number; code?: string | number; message?: string }
-      | undefined;
+      { number?: number; code?: string | number; message?: string } | undefined;
     const number = Number(driverError?.number ?? driverError?.code);
     // SQL Server unique constraint / unique index violation numbers.
     if (number === 2627 || number === 2601) {
       return true;
     }
 
-    const message = `${error.message} ${driverError?.message ?? ''}`.toLowerCase();
+    const message =
+      `${error.message} ${driverError?.message ?? ''}`.toLowerCase();
     return (
       message.includes('unique') ||
       message.includes('duplicate') ||

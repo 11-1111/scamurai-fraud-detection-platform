@@ -59,7 +59,11 @@ export class FraudAlertEntity {
   @Column({ name: 'features_json', type: 'nvarchar', nullable: true })
   featuresJson?: string;
 
-  @Column({ name: 'related_identifiers_json', type: 'nvarchar', nullable: true })
+  @Column({
+    name: 'related_identifiers_json',
+    type: 'nvarchar',
+    nullable: true,
+  })
   relatedIdentifiersJson?: string;
 
   @Column({ name: 'graph_json', type: 'nvarchar', nullable: true })

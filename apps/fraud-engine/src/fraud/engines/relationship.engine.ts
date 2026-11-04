@@ -2,10 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { FraudIdentifierEntity } from '../../database/entities/fraud-identifier.entity';
-import {
-  RelatedIdentifier,
-  RelatedIdentifiers,
-} from '../types/fraud.types';
+import { RelatedIdentifier, RelatedIdentifiers } from '../types/fraud.types';
 
 type RelationshipGroupKey =
   | 'emails'

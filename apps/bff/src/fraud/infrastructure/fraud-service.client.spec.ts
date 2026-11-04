@@ -21,11 +21,7 @@ const axiosResponse = <T>(data: T, status = 200): AxiosResponse<T> =>
     config: {} as AxiosResponse['config'],
   }) as AxiosResponse<T>;
 
-const axiosError = (
-  status?: number,
-  message?: string,
-  code?: string,
-) => {
+const axiosError = (status?: number, message?: string, code?: string) => {
   const err = Object.assign(new Error(message ?? 'request failed'), {
     isAxiosError: true,
     code,
@@ -115,7 +111,9 @@ describe('FraudServiceClient', () => {
 
   it('preserves upstream validation messages as BadRequestException', async () => {
     httpRequest.mockReturnValueOnce(
-      throwError(() => axiosError(400, 'scoreImpact must be between 0 and 100')),
+      throwError(() =>
+        axiosError(400, 'scoreImpact must be between 0 and 100'),
+      ),
     );
 
     await expect(

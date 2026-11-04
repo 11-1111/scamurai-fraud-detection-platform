@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { FraudAlertHistoryEntity } from '../database/entities/fraud-alert-history.entity';
@@ -39,13 +43,19 @@ export class FraudAlertsService {
       qb.andWhere('alert.alert_status = :status', { status: query.status });
     }
     if (query.riskLevel) {
-      qb.andWhere('alert.risk_level = :riskLevel', { riskLevel: query.riskLevel });
+      qb.andWhere('alert.risk_level = :riskLevel', {
+        riskLevel: query.riskLevel,
+      });
     }
     if (query.decision) {
-      qb.andWhere('alert.final_decision = :decision', { decision: query.decision });
+      qb.andWhere('alert.final_decision = :decision', {
+        decision: query.decision,
+      });
     }
     if (query.assignedTo) {
-      qb.andWhere('alert.assigned_to = :assignedTo', { assignedTo: query.assignedTo });
+      qb.andWhere('alert.assigned_to = :assignedTo', {
+        assignedTo: query.assignedTo,
+      });
     }
     if (query.rootIdentifierType) {
       qb.andWhere('alert.root_identifier_type = :rootIdentifierType', {
@@ -96,7 +106,10 @@ export class FraudAlertsService {
     return {
       ...this.toSummary(alert),
       features: this.parseJson<Record<string, number>>(alert.featuresJson, {}),
-      relatedIdentifiers: this.parseJson<unknown>(alert.relatedIdentifiersJson, {}),
+      relatedIdentifiers: this.parseJson<unknown>(
+        alert.relatedIdentifiersJson,
+        {},
+      ),
       graph: this.parseJson<unknown>(alert.graphJson, {}),
       triggeredRules,
       policyActions,
@@ -171,8 +184,7 @@ export class FraudAlertsService {
       newStatus: alert.alertStatus,
       previousAssignee,
       newAssignee: alert.assignedTo,
-      performedBy:
-        options?.performedBy?.trim() || alert.assignedTo || null,
+      performedBy: options?.performedBy?.trim() || alert.assignedTo || null,
       comment: options?.comment?.trim() || null,
     });
     return this.toSummary(alert);

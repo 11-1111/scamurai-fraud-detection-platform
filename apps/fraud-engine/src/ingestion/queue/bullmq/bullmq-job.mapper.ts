@@ -60,9 +60,7 @@ export function mapScheduleToRepeatOptions(
   };
 }
 
-export function mapBullMqStateToJobQueueStatus(
-  state: string,
-): JobQueueStatus {
+export function mapBullMqStateToJobQueueStatus(state: string): JobQueueStatus {
   switch (state) {
     case 'waiting':
     case 'wait':
@@ -90,7 +88,8 @@ export async function mapBullMqJobToJobQueueJob<
   queueName: JobQueueName,
   statusOverride?: JobQueueStatus,
 ): Promise<JobQueueJob<TPayload, TResult>> {
-  const state = statusOverride ?? mapBullMqStateToJobQueueStatus(await job.getState());
+  const state =
+    statusOverride ?? mapBullMqStateToJobQueueStatus(await job.getState());
 
   const mappedStatus =
     state === JobQueueStatus.UNKNOWN && job.finishedOn && job.failedReason

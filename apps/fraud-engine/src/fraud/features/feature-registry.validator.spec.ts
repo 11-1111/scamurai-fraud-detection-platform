@@ -23,7 +23,10 @@ describe('validateFeatureCalculators', () => {
   it('accepts a valid calculator registry', () => {
     expect(() =>
       validateFeatureCalculators([
-        createValidCalculator({ featureName: 'alphaFeature', executionOrder: 1 }),
+        createValidCalculator({
+          featureName: 'alphaFeature',
+          executionOrder: 1,
+        }),
         createValidCalculator({
           featureName: 'betaFeature',
           executionOrder: 2,
@@ -37,7 +40,9 @@ describe('validateFeatureCalculators', () => {
 
   it('throws for empty feature names', () => {
     expect(() =>
-      validateFeatureCalculators([createValidCalculator({ featureName: '   ' })]),
+      validateFeatureCalculators([
+        createValidCalculator({ featureName: '   ' }),
+      ]),
     ).toThrow('featureName is required');
   });
 
@@ -45,7 +50,10 @@ describe('validateFeatureCalculators', () => {
     expect(() =>
       validateFeatureCalculators([
         createValidCalculator({ featureName: 'duplicateFeature' }),
-        createValidCalculator({ featureName: 'duplicateFeature', executionOrder: 2 }),
+        createValidCalculator({
+          featureName: 'duplicateFeature',
+          executionOrder: 2,
+        }),
       ]),
     ).toThrow('duplicate featureName "duplicateFeature"');
   });
@@ -53,7 +61,10 @@ describe('validateFeatureCalculators', () => {
   it('throws when dataType and defaultValue mismatch for numbers', () => {
     expect(() =>
       validateFeatureCalculators([
-        createValidCalculator({ dataType: 'number', defaultValue: false as never }),
+        createValidCalculator({
+          dataType: 'number',
+          defaultValue: false as never,
+        }),
       ]),
     ).toThrow('defaultValue must be a number');
   });
@@ -80,9 +91,7 @@ describe('validateFeatureCalculators', () => {
 
   it('throws for invalid windowSeconds', () => {
     expect(() =>
-      validateFeatureCalculators([
-        createValidCalculator({ windowSeconds: 0 }),
-      ]),
+      validateFeatureCalculators([createValidCalculator({ windowSeconds: 0 })]),
     ).toThrow('windowSeconds must be a positive number');
   });
 

@@ -13,6 +13,9 @@ export interface JobExecutionContext<TPayload extends JobPayload> {
   attemptsMade: number;
 }
 
-export interface JobQueueProcessor<TPayload extends JobPayload, TResult = unknown> {
+export interface JobQueueProcessor<
+  TPayload extends JobPayload,
+  TResult = unknown,
+> {
   process(context: JobExecutionContext<TPayload>): Promise<TResult>;
 }

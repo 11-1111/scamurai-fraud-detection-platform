@@ -19,19 +19,16 @@ import {
   mapRiskLevel,
   mapRule,
 } from '../fraud/mappers/fraud.mapper';
-import {
-  CreateFraudRuleDto,
-  UpdateFraudRuleDto,
-} from './dto/create-rule.dto';
+import { CreateFraudRuleDto, UpdateFraudRuleDto } from './dto/create-rule.dto';
 
 @Injectable()
 export class FraudConfigService {
   constructor(private readonly fraudClient: FraudServiceClient) {}
 
   async getFeatures(): Promise<FraudFeatureCatalogItemDto[]> {
-    const upstream = await this.fraudClient.get<UpstreamFraudFeatureCatalogItem[]>(
-      '/fraud/config/features',
-    );
+    const upstream = await this.fraudClient.get<
+      UpstreamFraudFeatureCatalogItem[]
+    >('/fraud/config/features');
     return upstream.map(mapFeatureCatalogItem);
   }
 
@@ -57,7 +54,10 @@ export class FraudConfigService {
     return mapRule(upstream);
   }
 
-  async updateRule(id: string, body: UpdateFraudRuleDto): Promise<FraudRuleDto> {
+  async updateRule(
+    id: string,
+    body: UpdateFraudRuleDto,
+  ): Promise<FraudRuleDto> {
     const upstream = await this.fraudClient.patch<UpstreamFraudRule>(
       `/fraud/config/rules/${id}`,
       { body },

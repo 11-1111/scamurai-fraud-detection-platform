@@ -11,7 +11,9 @@ export function validateFeatureCalculators(
     const featureName = calculator.featureName?.trim();
 
     if (!featureName) {
-      throw new Error('Feature calculator registration failed: featureName is required.');
+      throw new Error(
+        'Feature calculator registration failed: featureName is required.',
+      );
     }
 
     if (seenNames.has(featureName)) {
@@ -54,7 +56,10 @@ export function validateFeatureCalculators(
       );
     }
 
-    if (calculator.dataType === 'number' && typeof calculator.defaultValue !== 'number') {
+    if (
+      calculator.dataType === 'number' &&
+      typeof calculator.defaultValue !== 'number'
+    ) {
       throw new Error(
         `Feature calculator registration failed: defaultValue must be a number for numeric feature "${featureName}".`,
       );
@@ -71,7 +76,8 @@ export function validateFeatureCalculators(
 
     if (
       calculator.windowSeconds !== undefined &&
-      (!Number.isFinite(calculator.windowSeconds) || calculator.windowSeconds <= 0)
+      (!Number.isFinite(calculator.windowSeconds) ||
+        calculator.windowSeconds <= 0)
     ) {
       throw new Error(
         `Feature calculator registration failed: windowSeconds must be a positive number for "${featureName}".`,

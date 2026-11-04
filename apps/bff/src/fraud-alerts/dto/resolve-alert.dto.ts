@@ -7,7 +7,9 @@ export class ResolveAlertDto {
   @IsNotEmpty()
   resolution: string;
 
-  @ApiPropertyOptional({ description: 'Optional note recorded with the resolution' })
+  @ApiPropertyOptional({
+    description: 'Optional note recorded with the resolution',
+  })
   @IsOptional()
   @IsString()
   note?: string;

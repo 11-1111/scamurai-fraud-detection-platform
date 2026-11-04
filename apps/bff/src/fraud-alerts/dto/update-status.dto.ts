@@ -7,7 +7,9 @@ export class UpdateStatusDto {
   @IsNotEmpty()
   status: string;
 
-  @ApiPropertyOptional({ description: 'Optional comment recorded in alert history' })
+  @ApiPropertyOptional({
+    description: 'Optional comment recorded in alert history',
+  })
   @IsOptional()
   @IsString()
   comment?: string;

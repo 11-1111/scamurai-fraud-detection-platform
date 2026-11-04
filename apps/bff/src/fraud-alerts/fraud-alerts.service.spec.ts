@@ -90,7 +90,9 @@ describe('FraudAlertsService', () => {
   });
 
   it('propagates NotFoundException from the client', async () => {
-    fraudClient.get.mockRejectedValueOnce(new NotFoundException('Alert not found.'));
+    fraudClient.get.mockRejectedValueOnce(
+      new NotFoundException('Alert not found.'),
+    );
 
     await expect(service.getAlert('missing')).rejects.toBeInstanceOf(
       NotFoundException,

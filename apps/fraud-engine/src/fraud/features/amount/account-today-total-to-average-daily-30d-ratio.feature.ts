@@ -8,9 +8,7 @@ import { FeatureContext } from '../feature-context';
 import { FeatureUtilsService } from '../feature-utils.service';
 
 @Injectable()
-export class AccountTodayTotalToAverageDaily30dRatioFeature
-  implements FeatureCalculator
-{
+export class AccountTodayTotalToAverageDaily30dRatioFeature implements FeatureCalculator {
   readonly featureName = 'accountTodayTotalToAverageDaily30dRatio';
   readonly label = 'Today total to 30-day daily account average ratio';
   readonly description =

@@ -198,7 +198,11 @@ export class FraudConfigService {
 
   private validateThresholdValue(thresholdValue: unknown): number {
     const parsed = Number(thresholdValue);
-    if (thresholdValue === undefined || thresholdValue === null || !Number.isFinite(parsed)) {
+    if (
+      thresholdValue === undefined ||
+      thresholdValue === null ||
+      !Number.isFinite(parsed)
+    ) {
       throw new BadRequestException('"thresholdValue" must be a number.');
     }
     return parsed;

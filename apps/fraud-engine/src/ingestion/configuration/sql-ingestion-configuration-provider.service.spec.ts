@@ -42,7 +42,9 @@ describe('SqlIngestionConfigurationProvider', () => {
   it('getBySourceName returns a mapped domain configuration', async () => {
     configRepo.findOne.mockResolvedValue(validEntity);
 
-    const result = await provider.getBySourceName('TransactionsDb.Transactions');
+    const result = await provider.getBySourceName(
+      'TransactionsDb.Transactions',
+    );
 
     expect(result).toEqual({
       sourceName: 'TransactionsDb.Transactions',
@@ -100,9 +102,9 @@ describe('SqlIngestionConfigurationProvider', () => {
     expect(results).toHaveLength(2);
     expect(results[0].sourceName).toBe('Another.Source');
     expect(results[1].sourceName).toBe('TransactionsDb.Transactions');
-    expect(results.every((item) => !(item instanceof FraudIngestionConfigEntity))).toBe(
-      true,
-    );
+    expect(
+      results.every((item) => !(item instanceof FraudIngestionConfigEntity)),
+    ).toBe(true);
   });
 
   it.each([

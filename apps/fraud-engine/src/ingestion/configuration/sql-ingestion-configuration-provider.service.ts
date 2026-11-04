@@ -12,9 +12,7 @@ import { IngestionConfiguration } from './ingestion-configuration';
 import { IngestionConfigurationProvider } from './ingestion-configuration-provider.interface';
 
 @Injectable()
-export class SqlIngestionConfigurationProvider
-  implements IngestionConfigurationProvider
-{
+export class SqlIngestionConfigurationProvider implements IngestionConfigurationProvider {
   private readonly logger = new Logger(SqlIngestionConfigurationProvider.name);
 
   constructor(
@@ -78,10 +76,7 @@ export class SqlIngestionConfigurationProvider
       invalidFields.push('sourceName');
     }
 
-    if (
-      entity.intervalMinutes < 1 ||
-      entity.intervalMinutes > 1440
-    ) {
+    if (entity.intervalMinutes < 1 || entity.intervalMinutes > 1440) {
       invalidFields.push('intervalMinutes');
     }
 

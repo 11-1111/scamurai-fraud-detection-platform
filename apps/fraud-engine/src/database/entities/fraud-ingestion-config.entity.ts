@@ -1,7 +1,9 @@
 import { Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({ name: 'fraud_ingestion_config' })
-@Index('UX_fraud_ingestion_config_source_name', ['sourceName'], { unique: true })
+@Index('UX_fraud_ingestion_config_source_name', ['sourceName'], {
+  unique: true,
+})
 export class FraudIngestionConfigEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;

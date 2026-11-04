@@ -1,6 +1,9 @@
 import type { Job } from 'bullmq';
 
-import { INGESTION_POLL_JOB, INGESTION_QUEUE_NAME } from '../queue/ingestion-job.constants';
+import {
+  INGESTION_POLL_JOB,
+  INGESTION_QUEUE_NAME,
+} from '../queue/ingestion-job.constants';
 import { mapBullMqJobToJobExecutionContext } from './worker.mapper';
 
 describe('mapBullMqJobToJobExecutionContext', () => {

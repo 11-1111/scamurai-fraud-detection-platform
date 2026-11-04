@@ -19,7 +19,8 @@ describe('BullMQ architectural boundaries', () => {
     ];
 
     const offenders = findForbiddenImports(srcRoot, forbiddenPatterns).filter(
-      (filePath) => !allowedPaths.some((allowedPath) => filePath.includes(allowedPath)),
+      (filePath) =>
+        !allowedPaths.some((allowedPath) => filePath.includes(allowedPath)),
     );
 
     expect(offenders).toEqual([]);

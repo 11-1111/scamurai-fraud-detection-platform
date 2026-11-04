@@ -8,9 +8,7 @@ import { FeatureContext } from '../feature-context';
 import { FeatureUtilsService } from '../feature-utils.service';
 
 @Injectable()
-export class MerchantRefDistinctPaymentAccounts24hFeature
-  implements FeatureCalculator
-{
+export class MerchantRefDistinctPaymentAccounts24hFeature implements FeatureCalculator {
   readonly featureName = 'merchantRefDistinctPaymentAccounts24h';
   readonly label =
     'Distinct payment accounts per merchant reference in 24 hours';

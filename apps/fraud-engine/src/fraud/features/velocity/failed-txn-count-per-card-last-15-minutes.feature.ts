@@ -8,9 +8,7 @@ import { FeatureContext } from '../feature-context';
 import { FeatureUtilsService } from '../feature-utils.service';
 
 @Injectable()
-export class FailedTxnCountPerCardLast15MinutesFeature
-  implements FeatureCalculator
-{
+export class FailedTxnCountPerCardLast15MinutesFeature implements FeatureCalculator {
   readonly featureName = 'failedTxnCountPerCardLast15Minutes';
   readonly label = 'Failed transactions per card in last 15 minutes';
   readonly description = 'Detect repeated failed card attempts.';

@@ -9,8 +9,14 @@ export class TransactionsController {
   constructor(private readonly service: TransactionsService) {}
 
   @Get('fraud-debug')
-  @ApiOperation({ summary: 'Debug: fetch fraud profile for a given identifier' })
-  @ApiQuery({ name: 'type', required: true, description: 'Identifier type (e.g. email, ip)' })
+  @ApiOperation({
+    summary: 'Debug: fetch fraud profile for a given identifier',
+  })
+  @ApiQuery({
+    name: 'type',
+    required: true,
+    description: 'Identifier type (e.g. email, ip)',
+  })
   @ApiQuery({ name: 'value', required: true, description: 'Identifier value' })
   async getFraudDebug(
     @Query('type') type: string,
@@ -21,7 +27,8 @@ export class TransactionsController {
 
   @Get()
   @ApiOperation({
-    summary: 'Search transactions enriched with fraud profile and page correlations',
+    summary:
+      'Search transactions enriched with fraud profile and page correlations',
   })
   async getTransactions(@Query() query: Record<string, unknown>) {
     return this.service.getTransactions(query);

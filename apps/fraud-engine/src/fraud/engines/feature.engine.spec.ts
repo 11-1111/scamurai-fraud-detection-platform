@@ -33,7 +33,8 @@ const emptyRelatedIdentifiers = {
 };
 
 function createMockCalculator(
-  overrides: Partial<FeatureCalculator> & Pick<FeatureCalculator, 'featureName'>,
+  overrides: Partial<FeatureCalculator> &
+    Pick<FeatureCalculator, 'featureName'>,
 ): FeatureCalculator {
   return {
     label: overrides.featureName,
@@ -231,17 +232,26 @@ describe('FeatureEngine', () => {
 
 describe('FeatureEngine architectural verification', () => {
   it('does not contain PLUGIN_FEATURE_NAMES', () => {
-    const source = fs.readFileSync(path.join(__dirname, 'feature.engine.ts'), 'utf8');
+    const source = fs.readFileSync(
+      path.join(__dirname, 'feature.engine.ts'),
+      'utf8',
+    );
     expect(source).not.toContain('PLUGIN_FEATURE_NAMES');
   });
 
   it('does not contain getDefaultAdvancedFeatures', () => {
-    const source = fs.readFileSync(path.join(__dirname, 'feature.engine.ts'), 'utf8');
+    const source = fs.readFileSync(
+      path.join(__dirname, 'feature.engine.ts'),
+      'utf8',
+    );
     expect(source).not.toContain('getDefaultAdvancedFeatures');
   });
 
   it('does not contain advanced FEATURE_DISPLAY_META entries', () => {
-    const source = fs.readFileSync(path.join(__dirname, 'feature.engine.ts'), 'utf8');
+    const source = fs.readFileSync(
+      path.join(__dirname, 'feature.engine.ts'),
+      'utf8',
+    );
     expect(source).not.toContain('FEATURE_DISPLAY_META');
   });
 });

@@ -425,10 +425,13 @@ describe('TransactionsService', () => {
     });
 
     it('throws GatewayTimeoutException when ASP.NET backend request times out', async () => {
-      const axiosError = Object.assign(new Error('timeout of 60000ms exceeded'), {
-        isAxiosError: true,
-        code: 'ECONNABORTED',
-      });
+      const axiosError = Object.assign(
+        new Error('timeout of 60000ms exceeded'),
+        {
+          isAxiosError: true,
+          code: 'ECONNABORTED',
+        },
+      );
       httpGet.mockReturnValueOnce(throwError(() => axiosError));
 
       await expect(
