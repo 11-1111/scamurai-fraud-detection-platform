@@ -1,0 +1,36 @@
+{
+  "name": "scamurai",
+  "version": "0.1.0",
+  "private": true,
+  "license": "MIT",
+  "description": "Fraud detection and risk analysis platform",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/11-1111/Scamurai.git"
+  },
+  "engines": {
+    "node": ">=20.11.0"
+  },
+  "workspaces": [
+    "apps/bff",
+    "apps/fraud-engine",
+    "apps/frontend"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces --if-present",
+    "lint": "npm run lint --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "format": "npm run format --workspaces --if-present",
+    "dev:frontend": "npm run dev --workspace apps/frontend",
+    "dev:bff": "npm run start:dev --workspace apps/bff",
+    "dev:engine": "npm run start:dev --workspace apps/fraud-engine",
+    "db:migrate": "npm run db:migrate --workspace apps/fraud-engine",
+    "db:migrate:check": "npm run db:migrate:check --workspace apps/fraud-engine",
+    "db:seed": "npm run db:seed --workspace apps/fraud-engine",
+    "up": "docker compose -f infra/docker/docker-compose.yml up -d --build",
+    "up:seed": "docker compose -f infra/docker/docker-compose.yml --profile seed up -d --build",
+    "down": "docker compose -f infra/docker/docker-compose.yml down",
+    "down:clean": "docker compose -f infra/docker/docker-compose.yml down -v",
+    "logs": "docker compose -f infra/docker/docker-compose.yml logs -f"
+  }
+}
