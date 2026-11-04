@@ -11,10 +11,13 @@
  *   npm run db:seed -- --count 5000 --days 7         smaller window
  *   npm run db:seed -- --truncate                    replace existing rows
  *   npm run db:seed -- --manifest rings.json         write the label file
+ *   npm run db:seed -- --anchor 2026-11-01T00:00:00Z fixed timestamps
  *
- * Deterministic by construction. The same --seed produces byte-identical
- * output, so a regression test can assert on exact transaction ids and a
- * reviewer comparing two runs is comparing like with like.
+ * All randomness is seeded, UUIDs included, so the same --seed produces the
+ * same transaction ids, the same identities and the same ring membership
+ * every time: a regression test can assert on exact ids. Timestamps are
+ * relative to --anchor, which defaults to now so a fresh run looks recent;
+ * pass it explicitly to make a run reproducible down to the timestamp.
  *
  * Every planted ring is designed to trip specific feature calculators, named
  * in RINGS below. The manifest it writes is the label set: ring id, the
@@ -79,6 +82,19 @@ function stringFlag(name: string): string | undefined {
   return index === -1 ? undefined : process.argv[index + 1];
 }
 
+function anchorTime(): number {
+  const raw = stringFlag('anchor');
+  if (!raw) {
+    return Date.now();
+  }
+
+  const parsed = Date.parse(raw);
+  if (Number.isNaN(parsed)) {
+    throw new Error(`--anchor must be a date, received "${raw}".`);
+  }
+  return parsed;
+}
+
 const options = {
   count: Math.floor(flag('count', 100_000)),
   days: Math.floor(flag('days', 30)),
@@ -86,6 +102,8 @@ const options = {
   batchSize: Math.floor(flag('batch', 1_000)),
   truncate: process.argv.includes('--truncate'),
   manifestPath: stringFlag('manifest'),
+  /* The newest moment in the dataset. Rings are placed relative to it. */
+  anchor: anchorTime(),
 };
 
 /* ----------------------------------------------------------------
@@ -171,13 +189,18 @@ const EMAIL_DOMAINS = [
 const PAYMENT_METHODS = ['VISA', 'MASTERCARD', 'MPESA', 'AIRTEL_MONEY'] as const;
 const CURRENCIES = ['KES', 'KES', 'KES', 'USD'] as const;
 
+/*
+ * These strings matter: the engine classifies an outcome by looking for
+ * substrings in statusText and statusType rather than by matching an enum, so
+ * sample data has to use wording it actually recognises.
+ */
 const STATUS = {
   completed: { text: 'Completed', type: 'success' },
   declined: { text: 'Declined', type: 'failed' },
   pending: { text: 'Pending', type: 'info' },
 } as const;
 
-type Status = (typeof STATUS)[keyof typeof STATUS];
+type TransactionStatus = { text: string; type: string };
 
 /* ----------------------------------------------------------------
    Identity helpers
@@ -253,7 +276,13 @@ type RowOverrides = Partial<Row> & { at: Date };
 
 function buildRow(person: Person, overrides: RowOverrides): Row {
   const merchant = pick(MERCHANTS);
-  const status: Status = overrides.statusText
+
+  /*
+   * A caller that pins the status wins; otherwise roughly one in twelve
+   * background transactions is declined, which is the sort of baseline
+   * failure rate a decline-velocity rule has to stay quiet against.
+   */
+  const status: TransactionStatus = overrides.statusText
     ? { text: overrides.statusText, type: overrides.statusType ?? 'info' }
     : random() < 0.08
       ? STATUS.declined
@@ -569,7 +598,7 @@ const RINGS: Ring[] = [
    ---------------------------------------------------------------- */
 
 function generate(): { rows: Row[]; manifest: ManifestEntry[] } {
-  const now = Date.now();
+  const now = options.anchor;
   const windowStart = now - options.days * DAY;
   const rows: Row[] = [];
   const manifest: ManifestEntry[] = [];
@@ -743,9 +772,10 @@ async function main(): Promise<void> {
   try {
     if (options.truncate) {
       /*
-       * DELETE rather than TRUNCATE: the fraud database holds foreign keys
-       * onto these ids, and a truncate would be refused or would leave
-       * dangling references behind.
+       * DELETE rather than TRUNCATE. TRUNCATE needs ALTER on the table, and
+       * the seeder login is deliberately granted only SELECT, INSERT and
+       * DELETE -- see infra/database/least-privilege-logins.sql. Slower, and
+       * the right trade for a credential that cannot reshape the table.
        */
       console.log('Clearing existing transactions.');
       await pool.request().query('DELETE FROM dbo.Transactions');

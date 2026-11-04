@@ -52,6 +52,14 @@ test that a reader has to go and find.
 
 ## Reproducibility
 
-The generator is seeded (`--seed`, default `20261103`) and uses no unseeded
-randomness, including for UUIDs. The same arguments produce byte-identical
-output, so a test can assert on exact transaction ids.
+All randomness is seeded (`--seed`, default `20261103`), UUIDs included, so
+the same seed yields the same transaction ids, the same identities and the
+same ring membership on every run. A test can assert on exact ids.
+
+Timestamps are the exception: they are relative to `--anchor`, which defaults
+to the current time so a fresh dataset looks recent. Pass it explicitly when a
+run needs to be reproducible down to the timestamp:
+
+```bash
+npm run db:seed -- --anchor 2026-11-01T00:00:00Z
+```
