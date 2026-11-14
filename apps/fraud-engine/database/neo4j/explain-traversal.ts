@@ -48,12 +48,27 @@ type PlanNode = {
   children?: PlanNode[];
 };
 
+/*
+ * Neo4j qualifies every operator type with the database it ran against, so
+ * the planner reports "NodeUniqueIndexSeek@neo4j" rather than
+ * "NodeUniqueIndexSeek". Stripping it matters in both directions: without
+ * this, an expected seek is never recognised, and -- worse -- a forbidden
+ * "AllNodesScan@neo4j" does not match "AllNodesScan" either, so the check
+ * passes a query that reads the whole database.
+ */
+function normalizeOperator(operatorType: string): string {
+  const separator = operatorType.indexOf('@');
+  return separator === -1 ? operatorType : operatorType.slice(0, separator);
+}
+
 function collectOperators(plan: PlanNode | undefined): string[] {
   if (!plan) {
     return [];
   }
 
-  const operators = plan.operatorType ? [plan.operatorType] : [];
+  const operators = plan.operatorType
+    ? [normalizeOperator(plan.operatorType)]
+    : [];
   for (const child of plan.children ?? []) {
     operators.push(...collectOperators(child));
   }
