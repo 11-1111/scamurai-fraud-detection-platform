@@ -20,6 +20,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "db:migrate": "ts-node -T database/migrate.ts",
     "db:migrate:check": "ts-node -T database/migrate.ts --check",
+    "db:explain-graph": "ts-node -T database/neo4j/explain-traversal.ts",
     "db:seed": "ts-node -T database/seed/seed.ts"
   },
   "dependencies": {
