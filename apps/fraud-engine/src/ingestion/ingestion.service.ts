@@ -12,6 +12,7 @@ import { SourceTransactionEntity } from '../database/entities/source-transaction
 import { FraudTransactionEntity } from '../database/entities/fraud-transaction.entity';
 import { FraudIdentifierEntity } from '../database/entities/fraud-identifier.entity';
 import { FraudIngestionStateEntity } from '../database/entities/fraud-ingestion-state.entity';
+import { isDuplicateKeyError } from '../database/sql-server-errors';
 import { FraudEvaluationService } from '../fraud/fraud-evaluation.service';
 import { Neo4jService } from '../neo4j/neo4j.service';
 import {
@@ -275,24 +276,45 @@ export class IngestionService {
     });
   }
 
+  /*
+   * Insert optimistically and let the unique index decide, rather than
+   * checking for an existing row first: the check-then-insert version is a
+   * race, and this saves a round trip per identifier.
+   *
+   * Only a duplicate may be swallowed. A catch-all here reported a dropped
+   * connection, a deadlock or a type mismatch as "skipped duplicate" and
+   * returned normally, so the transaction was counted as ingested with
+   * identifiers missing -- and because the watermark then advanced past it,
+   * nothing ever revisited it. Its graph edges and velocity features stayed
+   * permanently wrong, with one debug line as the only trace.
+   *
+   * Anything else is rethrown, which stops the run at this transaction and
+   * leaves the cursor behind it so the next run retries it.
+   */
   private async insertIdentifierIfNotExists(
     tx: SourceTransactionEntity,
     type: string,
     value: string,
   ) {
+    const normalizedValue = value.trim();
+
     try {
       const identifier = this.fraudIdentifierRepo.create({
         transactionId: tx.id,
         identifierType: type,
-        identifierValue: value.trim(),
+        identifierValue: normalizedValue,
         transactionDate: tx.transactionDate,
         createdAt: new Date(),
       });
 
       await this.fraudIdentifierRepo.save(identifier);
-    } catch {
+    } catch (error) {
+      if (!isDuplicateKeyError(error)) {
+        throw error;
+      }
+
       this.logger.debug(
-        `Skipped duplicate identifier ${tx.id} ${type} ${value}`,
+        `Identifier already recorded for ${tx.id}: ${type}=${normalizedValue}`,
       );
     }
   }
