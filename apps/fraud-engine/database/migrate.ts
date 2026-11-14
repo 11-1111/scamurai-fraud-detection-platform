@@ -22,47 +22,18 @@
  */
 
 import { createHash } from 'node:crypto';
-import { existsSync, readdirSync, readFileSync } from 'node:fs';
+import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 import neo4j from 'neo4j-driver';
 import * as sql from 'mssql';
 
+import { loadEnvFile, requiredEnv } from './load-env';
+
 const MIGRATIONS_TABLE = 'schema_migrations';
 const checkOnly = process.argv.includes('--check');
 
-/*
- * The runner is a plain script rather than a Nest application, so it has no
- * ConfigModule to read .env for it. Values already in the environment win,
- * which is what lets the container pass configuration in without a file.
- */
-function loadEnvFile(path: string): void {
-  if (!existsSync(path)) {
-    return;
-  }
-
-  for (const line of readFileSync(path, 'utf8').split('\n')) {
-    const trimmed = line.trim();
-    if (!trimmed || trimmed.startsWith('#')) {
-      continue;
-    }
-
-    const separator = trimmed.indexOf('=');
-    if (separator <= 0) {
-      continue;
-    }
-
-    const key = trimmed.slice(0, separator).trim();
-    if (process.env[key] !== undefined) {
-      continue;
-    }
-
-    const value = trimmed.slice(separator + 1).trim();
-    process.env[key] = value.replace(/^(['"])(.*)\1$/, '$2');
-  }
-}
-
-loadEnvFile(join(__dirname, '..', '.env'));
+loadEnvFile();
 
 type SqlTarget = {
   label: string;
@@ -74,14 +45,6 @@ type SqlTarget = {
   username: string;
   password: string;
 };
-
-function required(key: string): string {
-  const value = process.env[key]?.trim();
-  if (!value) {
-    throw new Error(`Missing required environment variable: ${key}`);
-  }
-  return value;
-}
 
 function optionalPort(key: string): number | undefined {
   const raw = process.env[key]?.trim();
@@ -316,8 +279,8 @@ async function migrateNeo4j(directory: string): Promise<number> {
   }
 
   const driver = neo4j.driver(
-    required('NEO4J_URI'),
-    neo4j.auth.basic(required('NEO4J_USER'), required('NEO4J_PASSWORD')),
+    requiredEnv('NEO4J_URI'),
+    neo4j.auth.basic(requiredEnv('NEO4J_USER'), requiredEnv('NEO4J_PASSWORD')),
   );
 
   try {
@@ -424,23 +387,23 @@ async function main(): Promise<void> {
   const targets: SqlTarget[] = [
     {
       label: 'Source database',
-      database: required('SOURCE_DB_NAME'),
+      database: requiredEnv('SOURCE_DB_NAME'),
       directory: join(here, 'source'),
-      host: required('SOURCE_DB_HOST'),
+      host: requiredEnv('SOURCE_DB_HOST'),
       port: optionalPort('SOURCE_DB_PORT'),
       instanceName: process.env.SOURCE_DB_INSTANCE?.trim() || undefined,
-      username: required('SOURCE_DB_USERNAME'),
-      password: required('SOURCE_DB_PASSWORD'),
+      username: requiredEnv('SOURCE_DB_USERNAME'),
+      password: requiredEnv('SOURCE_DB_PASSWORD'),
     },
     {
       label: 'Fraud database',
-      database: required('FRAUD_DB_NAME'),
+      database: requiredEnv('FRAUD_DB_NAME'),
       directory: join(here, 'scripts'),
-      host: required('FRAUD_DB_HOST'),
+      host: requiredEnv('FRAUD_DB_HOST'),
       port: optionalPort('FRAUD_DB_PORT'),
       instanceName: process.env.FRAUD_DB_INSTANCE?.trim() || undefined,
-      username: required('FRAUD_DB_USERNAME'),
-      password: required('FRAUD_DB_PASSWORD'),
+      username: requiredEnv('FRAUD_DB_USERNAME'),
+      password: requiredEnv('FRAUD_DB_PASSWORD'),
     },
   ];
 
