@@ -1,14 +1,24 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { MoreThan, Repository } from 'typeorm';
+import {
+  Equal,
+  FindOptionsWhere,
+  MoreThan,
+  MoreThanOrEqual,
+  Repository,
+} from 'typeorm';
 
 import { SourceTransactionEntity } from '../database/entities/source-transaction.entity';
 import { FraudTransactionEntity } from '../database/entities/fraud-transaction.entity';
 import { FraudIdentifierEntity } from '../database/entities/fraud-identifier.entity';
 import { FraudIngestionStateEntity } from '../database/entities/fraud-ingestion-state.entity';
+import { isDuplicateKeyError } from '../database/sql-server-errors';
 import { FraudEvaluationService } from '../fraud/fraud-evaluation.service';
 import { Neo4jService } from '../neo4j/neo4j.service';
-import { TRANSACTIONS_INGESTION_SOURCE } from './ingestion.constants';
+import {
+  INGESTION_BATCH_SIZE,
+  TRANSACTIONS_INGESTION_SOURCE,
+} from './ingestion.constants';
 
 export interface IngestionEmptyResult {
   ingested: 0;
@@ -60,16 +70,17 @@ export class IngestionService {
 
     const state = await this.getOrCreateState();
 
-    const where = state.lastSyncedAt
-      ? { createdAt: MoreThan(state.lastSyncedAt) }
-      : {};
-
     const sourceTransactions = await this.sourceRepo.find({
-      where,
+      where: this.buildCursorFilter(state),
+      /*
+       * The ordering must match the cursor in buildCursorFilter exactly, or
+       * paging can step over rows. Backed by IX_Transactions_CreatedAt_Id.
+       */
       order: {
         createdAt: 'ASC',
+        id: 'ASC',
       },
-      take: 500,
+      take: INGESTION_BATCH_SIZE,
     });
 
     if (sourceTransactions.length === 0) {
@@ -124,6 +135,51 @@ export class IngestionService {
       lastSyncedAt: state.lastSyncedAt,
       lastSyncedTransactionId: state.lastSyncedTransactionId,
     };
+  }
+
+  /*
+   * Where to resume reading the source table.
+   *
+   * createdAt alone is not a cursor. It is not unique: upstream systems
+   * insert in batches, and DATETIME2 ties are ordinary at volume. If the last
+   * row of a batch shares its createdAt with the first row of the next one,
+   * resuming at `createdAt > watermark` steps straight over that row and
+   * every other row carrying the same timestamp -- silently, permanently, and
+   * invisibly in any log.
+   *
+   * The fix is a composite keyset over (createdAt, id): continue after a
+   * known position rather than after a point in time. id only has to impose
+   * a consistent total order, which SQL Server's uniqueidentifier comparison
+   * does; it need not be meaningful, and it is already stored on the state
+   * row as last_synced_transaction_id.
+   */
+  private buildCursorFilter(
+    state: FraudIngestionStateEntity,
+  ):
+    | FindOptionsWhere<SourceTransactionEntity>
+    | FindOptionsWhere<SourceTransactionEntity>[] {
+    if (!state.lastSyncedAt) {
+      return {};
+    }
+
+    if (!state.lastSyncedTransactionId) {
+      /*
+       * State written before the cursor carried an id. Re-reading the whole
+       * timestamp costs one repeat of however many rows share it; skipping
+       * them loses transactions outright. Ingestion upserts by primary key
+       * and dedupes identifiers, so the repeat is absorbed -- and this
+       * happens at most once per source, on the first run after upgrading.
+       */
+      return { createdAt: MoreThanOrEqual(state.lastSyncedAt) };
+    }
+
+    return [
+      { createdAt: MoreThan(state.lastSyncedAt) },
+      {
+        createdAt: Equal(state.lastSyncedAt),
+        id: MoreThan(state.lastSyncedTransactionId),
+      },
+    ];
   }
 
   private async getOrCreateState() {
@@ -220,24 +276,45 @@ export class IngestionService {
     });
   }
 
+  /*
+   * Insert optimistically and let the unique index decide, rather than
+   * checking for an existing row first: the check-then-insert version is a
+   * race, and this saves a round trip per identifier.
+   *
+   * Only a duplicate may be swallowed. A catch-all here reported a dropped
+   * connection, a deadlock or a type mismatch as "skipped duplicate" and
+   * returned normally, so the transaction was counted as ingested with
+   * identifiers missing -- and because the watermark then advanced past it,
+   * nothing ever revisited it. Its graph edges and velocity features stayed
+   * permanently wrong, with one debug line as the only trace.
+   *
+   * Anything else is rethrown, which stops the run at this transaction and
+   * leaves the cursor behind it so the next run retries it.
+   */
   private async insertIdentifierIfNotExists(
     tx: SourceTransactionEntity,
     type: string,
     value: string,
   ) {
+    const normalizedValue = value.trim();
+
     try {
       const identifier = this.fraudIdentifierRepo.create({
         transactionId: tx.id,
         identifierType: type,
-        identifierValue: value.trim(),
+        identifierValue: normalizedValue,
         transactionDate: tx.transactionDate,
         createdAt: new Date(),
       });
 
       await this.fraudIdentifierRepo.save(identifier);
-    } catch {
+    } catch (error) {
+      if (!isDuplicateKeyError(error)) {
+        throw error;
+      }
+
       this.logger.debug(
-        `Skipped duplicate identifier ${tx.id} ${type} ${value}`,
+        `Identifier already recorded for ${tx.id}: ${type}=${normalizedValue}`,
       );
     }
   }
