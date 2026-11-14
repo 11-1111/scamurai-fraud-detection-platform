@@ -125,6 +125,12 @@ jobs:
       - name: Re-running must be a no-op
         run: npm run db:migrate:check
 
+      # Unit tests prove the traversal is bounded against a fake driver. Only
+      # the real planner can say whether the Cypher seeks or scans, and a
+      # traversal that scans is the bug this replaced.
+      - name: Graph traversal must plan as a seek
+        run: npm run db:explain-graph
+
       - name: Seed a small dataset
         run: >-
           npm run db:seed --workspace apps/fraud-engine --

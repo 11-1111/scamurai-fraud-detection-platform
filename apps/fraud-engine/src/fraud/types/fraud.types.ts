@@ -44,6 +44,13 @@ export interface GraphEdge {
 export interface FraudGraph {
   nodes: GraphNode[];
   edges: GraphEdge[];
+  /*
+   * The network was larger than the traversal budget, so this is a slice of
+   * it. An analyst reading a partial network as if it were the whole one can
+   * conclude the opposite of the truth -- that a ring ends where the budget
+   * ran out -- so the caller is told rather than left to guess.
+   */
+  truncated?: boolean;
 }
 
 export interface TriggeredRule {

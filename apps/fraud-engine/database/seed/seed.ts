@@ -27,42 +27,17 @@
  * from.
  */
 
-import { existsSync, readFileSync, writeFileSync } from 'node:fs';
-import { join } from 'node:path';
+import { writeFileSync } from 'node:fs';
 
 import * as sql from 'mssql';
+
+import { loadEnvFile, requiredEnv } from '../load-env';
 
 /* ----------------------------------------------------------------
    Configuration
    ---------------------------------------------------------------- */
 
-function loadEnvFile(path: string): void {
-  if (!existsSync(path)) {
-    return;
-  }
-
-  for (const line of readFileSync(path, 'utf8').split('\n')) {
-    const trimmed = line.trim();
-    if (!trimmed || trimmed.startsWith('#')) {
-      continue;
-    }
-
-    const separator = trimmed.indexOf('=');
-    if (separator <= 0) {
-      continue;
-    }
-
-    const key = trimmed.slice(0, separator).trim();
-    if (process.env[key] !== undefined) {
-      continue;
-    }
-
-    const value = trimmed.slice(separator + 1).trim();
-    process.env[key] = value.replace(/^(['"])(.*)\1$/, '$2');
-  }
-}
-
-loadEnvFile(join(__dirname, '..', '..', '.env'));
+loadEnvFile();
 
 function flag(name: string, fallback: number): number {
   const index = process.argv.indexOf(`--${name}`);
@@ -731,14 +706,6 @@ function addRow(table: sql.Table, row: Row): void {
   );
 }
 
-function required(key: string): string {
-  const value = process.env[key]?.trim();
-  if (!value) {
-    throw new Error(`Missing required environment variable: ${key}`);
-  }
-  return value;
-}
-
 async function main(): Promise<void> {
   console.log(
     `Generating ${options.count.toLocaleString()} background transactions ` +
@@ -753,11 +720,11 @@ async function main(): Promise<void> {
   const instance = process.env.SOURCE_DB_INSTANCE?.trim();
 
   const pool = await new sql.ConnectionPool({
-    server: required('SOURCE_DB_HOST'),
+    server: requiredEnv('SOURCE_DB_HOST'),
     port: port ? Number(port) : undefined,
-    database: required('SOURCE_DB_NAME'),
-    user: required('SOURCE_DB_USERNAME'),
-    password: required('SOURCE_DB_PASSWORD'),
+    database: requiredEnv('SOURCE_DB_NAME'),
+    user: requiredEnv('SOURCE_DB_USERNAME'),
+    password: requiredEnv('SOURCE_DB_PASSWORD'),
     connectionTimeout: 30_000,
     requestTimeout: 600_000,
     options: {
