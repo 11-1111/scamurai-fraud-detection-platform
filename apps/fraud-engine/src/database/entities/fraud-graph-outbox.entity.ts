@@ -29,7 +29,12 @@ export class FraudGraphOutboxEntity {
   @Column({ type: 'int' })
   attempts: number;
 
-  @Column({ name: 'last_error', type: 'nvarchar', length: 2000, nullable: true })
+  @Column({
+    name: 'last_error',
+    type: 'nvarchar',
+    length: 2000,
+    nullable: true,
+  })
   lastError?: string;
 
   /** When this row becomes eligible again. Backoff is expressed here. */
