@@ -1,6 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
+import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import {
+  DataSource,
+  EntityManager,
   Equal,
   FindOptionsWhere,
   MoreThan,
@@ -14,7 +16,8 @@ import { FraudIdentifierEntity } from '../database/entities/fraud-identifier.ent
 import { FraudIngestionStateEntity } from '../database/entities/fraud-ingestion-state.entity';
 import { isDuplicateKeyError } from '../database/sql-server-errors';
 import { FraudEvaluationService } from '../fraud/fraud-evaluation.service';
-import { Neo4jService } from '../neo4j/neo4j.service';
+import { GraphOutboxService } from './graph/graph-outbox.service';
+import { GraphProjectionService } from './graph/graph-projection.service';
 import {
   INGESTION_BATCH_SIZE,
   TRANSACTIONS_INGESTION_SOURCE,
@@ -44,16 +47,19 @@ export class IngestionService {
     @InjectRepository(SourceTransactionEntity, 'source')
     private readonly sourceRepo: Repository<SourceTransactionEntity>,
 
-    @InjectRepository(FraudTransactionEntity, 'fraud')
-    private readonly fraudTransactionRepo: Repository<FraudTransactionEntity>,
-
-    @InjectRepository(FraudIdentifierEntity, 'fraud')
-    private readonly fraudIdentifierRepo: Repository<FraudIdentifierEntity>,
-
     @InjectRepository(FraudIngestionStateEntity, 'fraud')
     private readonly ingestionStateRepo: Repository<FraudIngestionStateEntity>,
 
-    private readonly neo4jService: Neo4jService,
+    /*
+     * The transaction row, its identifiers and the graph outbox entry are
+     * written through one EntityManager so they commit together, which a
+     * repository-per-entity cannot express.
+     */
+    @InjectDataSource('fraud')
+    private readonly fraudDataSource: DataSource,
+
+    private readonly graphOutbox: GraphOutboxService,
+    private readonly graphProjection: GraphProjectionService,
     private readonly fraudEvaluationService: FraudEvaluationService,
   ) {}
 
@@ -206,28 +212,58 @@ export class IngestionService {
   private async ingestTransaction(
     tx: SourceTransactionEntity,
   ): Promise<{ alertCreated: boolean }> {
-    // 1-2. Resolve FraudTransactionEntity in FraudDb after reading source tx.
-    const fraudTransaction = await this.upsertFraudTransaction(tx);
+    const fraudTransaction = await this.persistTransaction(tx);
 
-    const identifiers = this.extractIdentifiers(tx);
-
-    for (const identifier of identifiers) {
-      await this.insertIdentifierIfNotExists(
-        tx,
-        identifier.type,
-        identifier.value,
-      );
-    }
-
-    await this.upsertNeo4jGraph(tx);
+    /*
+     * FraudDb has committed, and its commit included a record that the graph
+     * owes a write. Applying it here keeps the graph current for the
+     * evaluation below; if this throws, the run stops and the cursor stays
+     * behind this transaction, and either the retry or the outbox drain
+     * applies it. The two stores can lag, but they cannot diverge.
+     */
+    await this.graphProjection.project(fraudTransaction);
+    await this.graphOutbox.markApplied(fraudTransaction.id);
 
     return this.evaluateAndCreateAlert(tx, fraudTransaction);
   }
 
-  private async upsertFraudTransaction(
+  /*
+   * The transaction row, its identifiers and the graph debt, committed
+   * together or not at all.
+   *
+   * Each was previously written on its own connection, with no transaction
+   * around them. A failure part way through left a transaction row visible
+   * to every reader with only some of its identifiers -- and the feature
+   * engine reads exactly those rows to compute velocity, so a half-ingested
+   * transaction did not merely look wrong, it changed other transactions'
+   * scores.
+   */
+  private async persistTransaction(
     tx: SourceTransactionEntity,
   ): Promise<FraudTransactionEntity> {
-    const fraudTx = this.fraudTransactionRepo.create({
+    return this.fraudDataSource.transaction(async (manager) => {
+      const fraudTransaction = await this.upsertFraudTransaction(manager, tx);
+
+      for (const identifier of this.extractIdentifiers(tx)) {
+        await this.insertIdentifierIfNotExists(
+          manager,
+          tx,
+          identifier.type,
+          identifier.value,
+        );
+      }
+
+      await this.graphOutbox.enqueue(manager, tx.id);
+
+      return fraudTransaction;
+    });
+  }
+
+  private async upsertFraudTransaction(
+    manager: EntityManager,
+    tx: SourceTransactionEntity,
+  ): Promise<FraudTransactionEntity> {
+    const fraudTx = manager.create(FraudTransactionEntity, {
       id: tx.id,
       transactionDate: tx.transactionDate,
       amountValue: tx.amountValue,
@@ -256,7 +292,7 @@ export class IngestionService {
       ingestedAt: new Date(),
     });
 
-    return this.fraudTransactionRepo.save(fraudTx);
+    return manager.save(FraudTransactionEntity, fraudTx);
   }
 
   private extractIdentifiers(tx: SourceTransactionEntity) {
@@ -292,6 +328,7 @@ export class IngestionService {
    * leaves the cursor behind it so the next run retries it.
    */
   private async insertIdentifierIfNotExists(
+    manager: EntityManager,
     tx: SourceTransactionEntity,
     type: string,
     value: string,
@@ -299,7 +336,7 @@ export class IngestionService {
     const normalizedValue = value.trim();
 
     try {
-      const identifier = this.fraudIdentifierRepo.create({
+      const identifier = manager.create(FraudIdentifierEntity, {
         transactionId: tx.id,
         identifierType: type,
         identifierValue: normalizedValue,
@@ -307,7 +344,7 @@ export class IngestionService {
         createdAt: new Date(),
       });
 
-      await this.fraudIdentifierRepo.save(identifier);
+      await manager.save(FraudIdentifierEntity, identifier);
     } catch (error) {
       if (!isDuplicateKeyError(error)) {
         throw error;
@@ -317,71 +354,6 @@ export class IngestionService {
         `Identifier already recorded for ${tx.id}: ${type}=${normalizedValue}`,
       );
     }
-  }
-
-  private async upsertNeo4jGraph(tx: SourceTransactionEntity) {
-    await this.neo4jService.run(
-      `
-      MERGE (t:Transaction {id: $transactionId})
-      SET t.date = $transactionDate,
-          t.amount = $amount,
-          t.currency = $currency,
-          t.status = $status,
-          t.confirmationCode = $confirmationCode,
-          t.orderTrackingId = $orderTrackingId,
-          t.bankAuthCode = $bankAuthCode
-
-      WITH t
-      FOREACH (_ IN CASE WHEN $email IS NULL THEN [] ELSE [1] END |
-        MERGE (e:Email {value: $email})
-        MERGE (t)-[:USED_EMAIL]->(e)
-      )
-
-      FOREACH (_ IN CASE WHEN $phone IS NULL THEN [] ELSE [1] END |
-        MERGE (p:Phone {value: $phone})
-        MERGE (t)-[:USED_PHONE]->(p)
-      )
-
-      FOREACH (_ IN CASE WHEN $ip IS NULL THEN [] ELSE [1] END |
-        MERGE (ip:IP {value: $ip})
-        MERGE (t)-[:USED_IP]->(ip)
-      )
-
-      FOREACH (_ IN CASE WHEN $paymentAccount IS NULL THEN [] ELSE [1] END |
-        MERGE (pa:PaymentAccount {value: $paymentAccount})
-        MERGE (t)-[:USED_PAYMENT_ACCOUNT]->(pa)
-      )
-
-      FOREACH (_ IN CASE WHEN $fingerprint IS NULL THEN [] ELSE [1] END |
-        MERGE (fp:DeviceFingerprint {value: $fingerprint})
-        MERGE (t)-[:USED_DEVICE]->(fp)
-      )
-
-      FOREACH (_ IN CASE WHEN $merchantEmail IS NULL THEN [] ELSE [1] END |
-        MERGE (m:Merchant {value: $merchantEmail})
-        SET m.name = $merchantName
-        MERGE (t)-[:BELONGS_TO_MERCHANT]->(m)
-      )
-      `,
-      {
-        transactionId: tx.id,
-        transactionDate: tx.transactionDate?.toISOString(),
-        amount: Number(tx.amountValue),
-        currency: tx.currencyCode,
-        status: tx.statusText,
-        confirmationCode: tx.confirmationCode || null,
-        orderTrackingId: tx.orderTrackingId || null,
-        bankAuthCode: tx.bankAuthCode || null,
-
-        email: tx.customerEmail?.trim() || null,
-        phone: tx.phone?.trim() || null,
-        ip: tx.ipAddress?.trim() || null,
-        paymentAccount: tx.paymentAccount?.trim() || null,
-        fingerprint: tx.deviceFingerprint?.trim() || null,
-        merchantEmail: tx.merchantEmail?.trim() || null,
-        merchantName: tx.merchantName || null,
-      },
-    );
   }
 
   private async evaluateAndCreateAlert(

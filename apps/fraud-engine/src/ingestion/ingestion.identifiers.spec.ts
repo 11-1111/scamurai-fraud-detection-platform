@@ -58,24 +58,55 @@ function buildHarness(identifierSaveResult: () => Promise<unknown>) {
     find: jest.fn(() => Promise.resolve([transaction])),
   };
 
-  const fraudTransactionRepo = {
-    create: jest.fn((row: unknown) => row),
-    save: jest.fn((row: unknown) => Promise.resolve(row)),
-  };
-
-  const identifierCreate = jest.fn((row: unknown) => row);
-  const fraudIdentifierRepo = {
-    create: identifierCreate,
-    save: jest.fn(() => identifierSaveResult()),
-  };
-
   const ingestionStateRepo = {
     findOne: jest.fn(() => Promise.resolve(state)),
     create: jest.fn((row: unknown) => row),
     save: jest.fn((row: unknown) => Promise.resolve(row)),
   };
 
-  const neo4jService = { run: jest.fn(() => Promise.resolve([])) };
+  const identifierCreate = jest.fn();
+
+  /*
+   * One EntityManager for the whole write, dispatching on the entity it is
+   * given: that is what the service now relies on to commit the transaction
+   * row, its identifiers and the outbox entry together.
+   */
+  const manager = {
+    create: jest.fn(
+      (entity: { name: string }, row: Record<string, unknown>) => {
+        if (entity.name === 'FraudIdentifierEntity') {
+          identifierCreate(row);
+        }
+        return row;
+      },
+    ),
+    save: jest.fn((entity: { name: string }, row: unknown) =>
+      entity.name === 'FraudIdentifierEntity'
+        ? identifierSaveResult()
+        : Promise.resolve(row),
+    ),
+    query: jest.fn(() => Promise.resolve([])),
+  };
+
+  const committed = jest.fn();
+  const fraudDataSource = {
+    transaction: jest.fn(async (work: (m: unknown) => Promise<unknown>) => {
+      const result = await work(manager);
+      // Only reached when the callback resolved, which is what "committed"
+      // means here.
+      committed();
+      return result;
+    }),
+  };
+
+  const graphOutbox = {
+    enqueue: jest.fn(() => Promise.resolve()),
+    markApplied: jest.fn(() => Promise.resolve()),
+  };
+
+  const graphProjection = {
+    project: jest.fn(() => Promise.resolve()),
+  };
 
   const fraudEvaluationService = {
     evaluateIdentifier: jest.fn(() => Promise.resolve({ alertCreated: true })),
@@ -83,10 +114,10 @@ function buildHarness(identifierSaveResult: () => Promise<unknown>) {
 
   const service = new IngestionService(
     sourceRepo as never,
-    fraudTransactionRepo as never,
-    fraudIdentifierRepo as never,
     ingestionStateRepo as never,
-    neo4jService as never,
+    fraudDataSource as never,
+    graphOutbox as never,
+    graphProjection as never,
     fraudEvaluationService as never,
   );
 
@@ -95,7 +126,9 @@ function buildHarness(identifierSaveResult: () => Promise<unknown>) {
     state,
     transaction,
     identifierCreate,
-    neo4jService,
+    committed,
+    graphOutbox,
+    graphProjection,
     fraudEvaluationService,
     ingestionStateRepo,
   };
@@ -114,12 +147,62 @@ describe('IngestionService identifier insertion', () => {
     );
 
     // The rest of the pipeline still ran for this transaction.
-    expect(harness.neo4jService.run).toHaveBeenCalledTimes(1);
+    expect(harness.graphProjection.project).toHaveBeenCalledTimes(1);
     expect(
       harness.fraudEvaluationService.evaluateIdentifier,
     ).toHaveBeenCalledTimes(1);
 
     expect(harness.state.lastSyncedTransactionId).toBe(harness.transaction.id);
+  });
+
+  it('commits the transaction, its identifiers and the outbox entry together', async () => {
+    const harness = buildHarness(() => Promise.resolve({}));
+
+    await harness.service.runIngestion();
+
+    // The outbox entry is written through the same manager as the rows, which
+    // is what makes "transaction visible" and "graph write owed" one event.
+    expect(harness.graphOutbox.enqueue).toHaveBeenCalledTimes(1);
+    expect(harness.committed).toHaveBeenCalledTimes(1);
+  });
+
+  it('commits nothing when an identifier insert fails', async () => {
+    const harness = buildHarness(() =>
+      Promise.reject(sqlServerError('deadlock victim', 1205)),
+    );
+
+    await harness.service.runIngestion();
+
+    // The callback rejected, so the transaction rolled back: no half-ingested
+    // row is left visible to the feature engine.
+    expect(harness.committed).not.toHaveBeenCalled();
+    expect(harness.graphProjection.project).not.toHaveBeenCalled();
+  });
+
+  it('discharges the outbox entry once the graph write lands', async () => {
+    const harness = buildHarness(() => Promise.resolve({}));
+
+    await harness.service.runIngestion();
+
+    expect(harness.graphProjection.project).toHaveBeenCalledTimes(1);
+    expect(harness.graphOutbox.markApplied).toHaveBeenCalledWith(
+      harness.transaction.id,
+    );
+  });
+
+  it('leaves the outbox entry when the graph write fails', async () => {
+    const harness = buildHarness(() => Promise.resolve({}));
+    harness.graphProjection.project.mockRejectedValue(
+      new Error('neo4j unavailable'),
+    );
+
+    const result = await harness.service.runIngestion();
+
+    // The run stops and the cursor stays put, so either the retry or the
+    // drain applies it. Crucially the entry is not discharged.
+    expect(result).toEqual(expect.objectContaining({ ingested: 0 }));
+    expect(harness.graphOutbox.markApplied).not.toHaveBeenCalled();
+    expect(harness.state.lastSyncedTransactionId).toBeNull();
   });
 
   it('stores the identifier value trimmed', async () => {
@@ -161,7 +244,7 @@ describe('IngestionService identifier insertion', () => {
       expect(harness.ingestionStateRepo.save).not.toHaveBeenCalled();
 
       // And the transaction was not scored on incomplete identifier data.
-      expect(harness.neo4jService.run).not.toHaveBeenCalled();
+      expect(harness.graphProjection.project).not.toHaveBeenCalled();
       expect(
         harness.fraudEvaluationService.evaluateIdentifier,
       ).not.toHaveBeenCalled();

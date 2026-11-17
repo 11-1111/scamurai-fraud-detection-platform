@@ -18,6 +18,7 @@ import { FraudAlertNoteEntity } from './database/entities/fraud-alert-note.entit
 import { FraudAlertHistoryEntity } from './database/entities/fraud-alert-history.entity';
 import { FraudTransactionEvaluationEntity } from './database/entities/fraud-transaction-evaluation.entity';
 import { FraudTransactionFeatureEntity } from './database/entities/fraud-transaction-feature.entity';
+import { FraudGraphOutboxEntity } from './database/entities/fraud-graph-outbox.entity';
 
 import { Neo4jModule } from './neo4j/neo4j.module';
 import { IngestionModule } from './ingestion/ingestion.module';
@@ -177,6 +178,7 @@ function createSqlServerConnection(
             FraudAlertHistoryEntity,
             FraudTransactionEvaluationEntity,
             FraudTransactionFeatureEntity,
+            FraudGraphOutboxEntity,
           ],
           false,
         ),
