@@ -96,7 +96,15 @@ export interface PolicyAction {
 }
 
 export interface RiskScoreResult {
+  /** Clamped to the scale the configured risk levels are expressed against. */
   riskScore: number;
+  /*
+   * The unclamped sum. Classification uses riskScore, so bands behave
+   * exactly as configured, but the clamp hides how much evidence there was:
+   * one critical rule and ten both score 100. A review queue can rank on
+   * this without changing any threshold.
+   */
+  rawScore: number;
   riskLevel: string;
   decision: string;
   displayColor?: string;
