@@ -8,12 +8,14 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CreateFraudRuleDto } from './dto/create-fraud-rule.dto';
 import { FraudProfileQueryDto } from './dto/fraud-profile-query.dto';
 import { UpdateFraudRuleDto } from './dto/update-fraud-rule.dto';
 import { FraudConfigService } from './fraud-config.service';
 import { FraudService } from './fraud.service';
 
+@ApiTags('Fraud Analysis')
 @Controller('fraud')
 export class FraudController {
   constructor(
@@ -22,6 +24,11 @@ export class FraudController {
   ) {}
 
   @Get('health')
+  @ApiOperation({
+    summary: 'Legacy health route',
+    deprecated: true,
+    description: 'Superseded by /health/live and /health/ready.',
+  })
   health() {
     return this.fraudService.health();
   }
@@ -32,6 +39,13 @@ export class FraudController {
   }
 
   @Get('network')
+  @ApiOperation({
+    summary: 'Identifier network around an identifier',
+    description:
+      'Breadth-first expansion on a node budget. Hub nodes are returned but ' +
+      'not expanded through, and `truncated` is set when the network was ' +
+      'larger than the budget allowed.',
+  })
   getNetwork(@Query() query: FraudProfileQueryDto) {
     return this.fraudService.getNetwork(query);
   }
@@ -62,6 +76,13 @@ export class FraudController {
   }
 
   @Post('config/rules')
+  @ApiOperation({
+    summary: 'Create a detection rule',
+    description:
+      'The feature name is validated against the feature catalogue and the ' +
+      'operator against what that feature supports, so a rule that could ' +
+      'never evaluate cannot be stored.',
+  })
   createRule(@Body() dto: CreateFraudRuleDto) {
     return this.fraudConfigService.createRule(dto);
   }
