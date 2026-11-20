@@ -11,6 +11,10 @@ import {
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
 import axios, { AxiosRequestConfig } from 'axios';
+import {
+  CORRELATION_ID_HEADER,
+  currentCorrelationId,
+} from '../../observability/request-context';
 
 import {
   createFraudServiceConfig,
@@ -69,12 +73,26 @@ export class FraudServiceClient implements OnModuleInit {
 
     this.logger.log(`Outgoing ${method} ${normalizedPath}`);
 
+    /*
+     * Forward the correlation id downstream. This is what makes a trace span
+     * both services: without it the engine mints its own id and a slow
+     * dashboard request and the ingestion work it triggered are two
+     * unrelated sets of log lines.
+     *
+     * Read from the request context rather than passed in, so every call
+     * site gets it without knowing it exists.
+     */
+    const correlationId = currentCorrelationId();
+
     const axiosConfig: AxiosRequestConfig = {
       method,
       url,
       params: options.params,
       data: options.body,
       timeout: options.timeoutMs ?? this.config.requestTimeoutMs,
+      ...(correlationId
+        ? { headers: { [CORRELATION_ID_HEADER]: correlationId } }
+        : {}),
     };
 
     try {
