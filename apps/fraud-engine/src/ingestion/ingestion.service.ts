@@ -17,6 +17,7 @@ import { FraudIngestionStateEntity } from '../database/entities/fraud-ingestion-
 import { isDuplicateKeyError } from '../database/sql-server-errors';
 import { FraudEvaluationService } from '../fraud/fraud-evaluation.service';
 import { MetricsService } from '../observability/metrics.service';
+import { IngestionLockService } from './ingestion-lock.service';
 import { GraphOutboxService } from './graph/graph-outbox.service';
 import { GraphProjectionService } from './graph/graph-projection.service';
 import {
@@ -27,6 +28,12 @@ import {
 export interface IngestionEmptyResult {
   ingested: 0;
   message: string;
+  /*
+   * True when the run did not happen because another one held the lock, as
+   * opposed to happening and finding nothing. The two are both "ingested
+   * zero" and mean entirely different things.
+   */
+  skipped?: boolean;
 }
 
 export interface IngestionBatchResult {
@@ -63,14 +70,43 @@ export class IngestionService {
     private readonly graphProjection: GraphProjectionService,
     private readonly fraudEvaluationService: FraudEvaluationService,
     private readonly metrics: MetricsService,
+    private readonly lock: IngestionLockService,
   ) {}
 
   async runScheduledSync(): Promise<IngestionRunResult> {
-    return this.runIngestion();
+    return this.runGuarded();
   }
 
   async runManualSync(): Promise<IngestionRunResult> {
-    return this.runIngestion();
+    return this.runGuarded();
+  }
+
+  /*
+   * Both entry points go through the lock.
+   *
+   * The scheduled path is already deduplicated by the orchestrator's
+   * deterministic job id, so this is belt and braces there -- but the manual
+   * endpoint bypasses the queue entirely, and the two paths can collide with
+   * each other as easily as with themselves.
+   *
+   * A run that cannot take the lock reports zero ingested rather than
+   * throwing: another run is doing the work, so nothing is wrong. The caller
+   * is told which it was so the endpoint can answer honestly.
+   */
+  private async runGuarded(): Promise<IngestionRunResult> {
+    const outcome = await this.lock.runExclusively(this.sourceName, () =>
+      this.runIngestion(),
+    );
+
+    if (!outcome.acquired) {
+      return {
+        ingested: 0,
+        message: 'An ingestion run is already in progress',
+        skipped: true,
+      };
+    }
+
+    return outcome.result;
   }
 
   async runIngestion(): Promise<IngestionRunResult> {
