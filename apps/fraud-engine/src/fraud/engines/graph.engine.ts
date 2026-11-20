@@ -75,6 +75,38 @@ export class GraphEngine {
     value: string,
     depth = DEFAULT_DEPTH,
   ): Promise<FraudGraph> {
+    /*
+     * An unreachable graph degrades rather than failing the caller.
+     *
+     * Everything else about an evaluation still works without Neo4j: the
+     * relational features read fraud_transactions, and related identifiers
+     * read fraud_identifiers. Only the network view is lost, and refusing to
+     * score a transaction over that would stop ingestion entirely for a
+     * dependency most of the decision does not use.
+     *
+     * The flag is what makes this safe. An empty network and an unavailable
+     * one look identical, and an analyst reading "no connections found" as
+     * evidence of innocence is the exact wrong conclusion -- so the caller is
+     * told which it was.
+     */
+    try {
+      return await this.buildNetwork(type, value, depth);
+    } catch (error) {
+      this.logger.warn(
+        `Identifier network unavailable for ${type}: ${
+          error instanceof Error ? error.message : String(error)
+        }`,
+      );
+
+      return { nodes: [], edges: [], degraded: true };
+    }
+  }
+
+  private async buildNetwork(
+    type: string,
+    value: string,
+    depth: number,
+  ): Promise<FraudGraph> {
     const label = GRAPH_LABEL_BY_IDENTIFIER_TYPE[type.trim().toLowerCase()];
     if (!label) {
       return EMPTY_GRAPH;
@@ -163,6 +195,12 @@ export class GraphEngine {
       nodes: Array.from(nodeMap.values()),
       edges: Array.from(edgeMap.values()),
       truncated,
+      /*
+       * Stated rather than left absent, so a caller never has to tell an
+       * unset field from a healthy read. The whole value of the flag is that
+       * "no connections" and "could not look" stop being the same answer.
+       */
+      degraded: false,
     };
   }
 

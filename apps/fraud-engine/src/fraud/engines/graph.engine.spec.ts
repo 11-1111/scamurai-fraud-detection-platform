@@ -394,6 +394,41 @@ describe('GraphEngine.getNetwork', () => {
     expect(graph.edges.map((edge) => edge.id)).toContain('rel-cross');
   });
 
+  it('degrades instead of failing when the graph is unreachable', async () => {
+    const neo4jStub = createNeo4jService({});
+    // Every query rejects: Neo4j is down rather than empty.
+    neo4jStub.run.mockRejectedValue(new Error('ServiceUnavailable'));
+    const engine = new GraphEngine(neo4jStub.service);
+
+    const graph = await engine.getNetwork('ip', '41.90.64.12');
+
+    /*
+     * Refusing to answer would stop every evaluation over a dependency most
+     * of a decision does not use: relational features and related
+     * identifiers both read SQL and are unaffected.
+     */
+    expect(graph.nodes).toEqual([]);
+    expect(graph.edges).toEqual([]);
+    expect(graph.degraded).toBe(true);
+  });
+
+  it('does not mark a genuinely empty network as degraded', async () => {
+    const neo4jStub = createNeo4jService({
+      root: { node: ROOT, degree: 0 },
+      hop: () => [],
+    });
+    const engine = new GraphEngine(neo4jStub.service);
+
+    const graph = await engine.getNetwork('ip', '41.90.64.12');
+
+    /*
+     * The distinction is the whole point. "No connections found" and "could
+     * not look" are the same response shape and opposite conclusions.
+     */
+    expect(graph.nodes).toHaveLength(1);
+    expect(graph.degraded).toBe(false);
+  });
+
   it('skips the closure query when there is nothing to close over', async () => {
     const neo4jStub = createNeo4jService({
       root: { node: ROOT, degree: 0 },
