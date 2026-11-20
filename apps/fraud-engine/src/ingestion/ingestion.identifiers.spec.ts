@@ -44,6 +44,16 @@ function sourceTransaction(): SourceTransactionEntity {
   };
 }
 
+const alwaysAcquires = {
+  runExclusively: async <T>(
+    _source: string,
+    work: () => Promise<T>,
+  ): Promise<{ acquired: true; result: T }> => ({
+    acquired: true,
+    result: await work(),
+  }),
+};
+
 function buildHarness(identifierSaveResult: () => Promise<unknown>) {
   const transaction = sourceTransaction();
 
@@ -123,6 +133,7 @@ function buildHarness(identifierSaveResult: () => Promise<unknown>) {
     graphProjection as never,
     fraudEvaluationService as never,
     metrics,
+    alwaysAcquires as never,
   );
 
   return {

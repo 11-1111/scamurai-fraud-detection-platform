@@ -120,6 +120,16 @@ function createFakeStateRepo(initial?: Partial<FraudIngestionStateEntity>) {
   };
 }
 
+const alwaysAcquires = {
+  runExclusively: async <T>(
+    _source: string,
+    work: () => Promise<T>,
+  ): Promise<{ acquired: true; result: T }> => ({
+    acquired: true,
+    result: await work(),
+  }),
+};
+
 function createService(
   sourceRepo: unknown,
   stateRepo: unknown,
@@ -135,6 +145,7 @@ function createService(
     {} as never,
     {} as never,
     metrics,
+    alwaysAcquires as never,
   );
 
   const ingested: string[] = [];
@@ -267,6 +278,92 @@ describe('IngestionService cursor', () => {
     expect(await metrics.metrics()).toContain(
       'scamurai_ingestion_runs_total{outcome="empty"} 1',
     );
+  });
+
+  /*
+   * Idempotency, stated as a property rather than left implied.
+   *
+   * Every write on the ingest path is idempotent by construction -- the
+   * transaction is upserted by primary key, identifiers are deduplicated by
+   * a unique constraint, the graph write is a MERGE, and the outbox entry is
+   * a MERGE on transaction_id. The property that matters to a caller is the
+   * one those add up to: running ingestion again over rows it has already
+   * seen changes nothing.
+   */
+  it('ingests nothing on a second pass over the same rows', async () => {
+    const base = Date.UTC(2026, 10, 1, 0, 0, 0);
+    const rows: FakeRow[] = Array.from({ length: 20 }, (_unused, index) => ({
+      id: `tx-${String(index).padStart(3, '0')}`,
+      createdAt: new Date(base + index * 1_000),
+    }));
+
+    const sourceRepo = createFakeSourceRepo(rows);
+    const { state, repo: stateRepo } = createFakeStateRepo();
+    const { service, ingested } = createService(sourceRepo, stateRepo);
+
+    const first = await service.runIngestion();
+    const watermarkAfterFirst = {
+      at: state.lastSyncedAt,
+      id: state.lastSyncedTransactionId,
+    };
+
+    const second = await service.runIngestion();
+
+    expect(first).toEqual(expect.objectContaining({ ingested: 20 }));
+
+    // The second pass finds nothing, rather than re-processing the batch.
+    expect(second).toEqual(
+      expect.objectContaining({ ingested: 0, message: expect.any(String) }),
+    );
+
+    // No transaction was handled twice, and the cursor did not move.
+    expect(ingested).toHaveLength(20);
+    expect(new Set(ingested).size).toBe(20);
+    expect(state.lastSyncedAt).toEqual(watermarkAfterFirst.at);
+    expect(state.lastSyncedTransactionId).toBe(watermarkAfterFirst.id);
+  });
+
+  it('re-processes only the batch that was in flight after a failure', async () => {
+    const base = Date.UTC(2026, 10, 1, 0, 0, 0);
+    const rows: FakeRow[] = Array.from({ length: 5 }, (_unused, index) => ({
+      id: `tx-${index}`,
+      createdAt: new Date(base + index * 1_000),
+    }));
+
+    const sourceRepo = createFakeSourceRepo(rows);
+    const { repo: stateRepo } = createFakeStateRepo();
+    const { service, ingested } = createService(sourceRepo, stateRepo);
+
+    let failUntilRetry = true;
+    jest
+      .spyOn(
+        service as unknown as {
+          ingestTransaction: (
+            tx: FakeRow,
+          ) => Promise<{ alertCreated: boolean }>;
+        },
+        'ingestTransaction',
+      )
+      .mockImplementation((tx: FakeRow) => {
+        if (tx.id === 'tx-3' && failUntilRetry) {
+          return Promise.reject(new Error('neo4j unavailable'));
+        }
+        ingested.push(tx.id);
+        return Promise.resolve({ alertCreated: false });
+      });
+
+    await service.runIngestion();
+    failUntilRetry = false;
+    await service.runIngestion();
+
+    /*
+     * tx-0 through tx-2 are ingested once: the cursor stopped behind tx-3, so
+     * the retry resumed there rather than replaying what had succeeded. This
+     * is the bound the endpoint documentation claims -- a repeated call
+     * re-processes at most the batch in flight, and in practice not even
+     * that.
+     */
+    expect(ingested).toEqual(['tx-0', 'tx-1', 'tx-2', 'tx-3', 'tx-4']);
   });
 
   it('resumes after a known position, not after a point in time', async () => {

@@ -2,6 +2,7 @@ import { Module, forwardRef } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { IngestionService } from './ingestion.service';
+import { IngestionLockService } from './ingestion-lock.service';
 import { NestCronJobOrchestrator } from './orchestration/nest-cron-job-orchestrator.service';
 import { JOB_ORCHESTRATOR } from './orchestration/job-orchestrator.token';
 import { IngestionController } from './ingestion.controller';
@@ -42,6 +43,7 @@ import { BullMqModule } from './queue/bullmq/bullmq.module';
   controllers: [IngestionController],
   providers: [
     IngestionService,
+    IngestionLockService,
     GraphProjectionService,
     GraphOutboxService,
     GraphOutboxWorker,
