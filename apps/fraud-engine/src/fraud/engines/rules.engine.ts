@@ -3,6 +3,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { FraudRuleConfigEntity } from '../../database/entities/fraud-rule-config.entity';
 import { FraudFeatures, TriggeredRule } from '../types/fraud.types';
+import {
+  MetricsService,
+  UnevaluableReason,
+} from '../../observability/metrics.service';
 import { compareFeature, resolveFeature } from './feature-resolution';
 
 @Injectable()
@@ -20,6 +24,8 @@ export class RulesEngine {
   constructor(
     @InjectRepository(FraudRuleConfigEntity, 'fraud')
     private readonly ruleConfigRepo: Repository<FraudRuleConfigEntity>,
+
+    private readonly metrics: MetricsService,
   ) {}
 
   async evaluate(features: FraudFeatures): Promise<TriggeredRule[]> {
@@ -43,6 +49,7 @@ export class RulesEngine {
          */
         this.reportUnevaluable(
           rule,
+          'missing_feature',
           `feature "${rule.featureName}" was not calculated`,
         );
         continue;
@@ -51,6 +58,7 @@ export class RulesEngine {
       if (feature.kind === 'unusable') {
         this.reportUnevaluable(
           rule,
+          'unusable_feature',
           `feature "${rule.featureName}" is not a number or a boolean`,
         );
         continue;
@@ -60,6 +68,7 @@ export class RulesEngine {
       if (!Number.isFinite(thresholdValue)) {
         this.reportUnevaluable(
           rule,
+          'bad_threshold',
           `threshold ${String(rule.thresholdValue)} is not a number`,
         );
         continue;
@@ -70,6 +79,7 @@ export class RulesEngine {
       if (comparison === null) {
         this.reportUnevaluable(
           rule,
+          'bad_operator',
           `operator "${rule.operator}" cannot be applied to a ${feature.kind} feature`,
         );
         continue;
@@ -100,8 +110,21 @@ export class RulesEngine {
    * every transaction is worse than a rule that is quietly inactive -- but it
    * must not be invisible either, or a rule nobody notices is dead stays dead.
    */
-  private reportUnevaluable(rule: FraudRuleConfigEntity, reason: string): void {
-    const key = `${rule.ruleCode}:${reason}`;
+  private reportUnevaluable(
+    rule: FraudRuleConfigEntity,
+    category: UnevaluableReason,
+    reason: string,
+  ): void {
+    /*
+     * The counter is incremented every time, while the log line is emitted
+     * once. They answer different questions: the log says what is wrong and
+     * is only useful if somebody is reading it, and the counter says it is
+     * still happening weeks later -- which is how a rule that has been dead
+     * since a deploy gets noticed at all.
+     */
+    this.metrics.recordUnevaluableRule(rule.ruleCode, category);
+
+    const key = `${rule.ruleCode}:${category}`;
     if (this.reportedRules.has(key)) {
       return;
     }
