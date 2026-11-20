@@ -206,7 +206,7 @@ describe('IngestionService identifier insertion', () => {
     );
   });
 
-  it('leaves the outbox entry when the graph write fails', async () => {
+  it('keeps ingesting when the graph write fails', async () => {
     const harness = buildHarness(() => Promise.resolve({}));
     harness.graphProjection.project.mockRejectedValue(
       new Error('neo4j unavailable'),
@@ -214,11 +214,56 @@ describe('IngestionService identifier insertion', () => {
 
     const result = await harness.service.runIngestion();
 
-    // The run stops and the cursor stays put, so either the retry or the
-    // drain applies it. Crucially the entry is not discharged.
-    expect(result).toEqual(expect.objectContaining({ ingested: 0 }));
+    /*
+     * This behaviour is the opposite of what it was, deliberately. Halting
+     * stopped ingestion entirely over a dependency most of a decision does
+     * not use, and the transactions it refused to read were still waiting
+     * when the outage ended.
+     *
+     * Carrying on is only safe because the outbox entry survives the commit:
+     * the write is owed whether or not this attempt succeeded.
+     */
+    expect(result).toEqual(expect.objectContaining({ ingested: 1 }));
+    expect(harness.state.lastSyncedTransactionId).toBe(harness.transaction.id);
+
+    // Not discharged, so the drain still applies it.
     expect(harness.graphOutbox.markApplied).not.toHaveBeenCalled();
-    expect(harness.state.lastSyncedTransactionId).toBeNull();
+  });
+
+  it('tells the evaluation the graph did not contribute', async () => {
+    const harness = buildHarness(() => Promise.resolve({}));
+    harness.graphProjection.project.mockRejectedValue(
+      new Error('neo4j unavailable'),
+    );
+
+    await harness.service.runIngestion();
+
+    /*
+     * The score is still worth having, but it must not look complete. An
+     * analyst reading "no connections found" as evidence of innocence is the
+     * exact wrong conclusion to draw from an outage.
+     */
+    expect(
+      harness.fraudEvaluationService.evaluateIdentifier,
+    ).toHaveBeenCalledWith(
+      expect.any(String),
+      expect.any(String),
+      expect.objectContaining({ graphAvailable: false }),
+    );
+  });
+
+  it('reports the graph as available when the write lands', async () => {
+    const harness = buildHarness(() => Promise.resolve({}));
+
+    await harness.service.runIngestion();
+
+    expect(
+      harness.fraudEvaluationService.evaluateIdentifier,
+    ).toHaveBeenCalledWith(
+      expect.any(String),
+      expect.any(String),
+      expect.objectContaining({ graphAvailable: true }),
+    );
   });
 
   it('stores the identifier value trimmed', async () => {

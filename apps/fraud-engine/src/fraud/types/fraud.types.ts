@@ -51,6 +51,13 @@ export interface FraudGraph {
    * ran out -- so the caller is told rather than left to guess.
    */
   truncated?: boolean;
+  /*
+   * The graph could not be read at all, so this is empty because it is
+   * unknown rather than because nothing is connected. The distinction is the
+   * whole point: "no connections found" read as evidence of innocence is the
+   * exact wrong conclusion to draw from an outage.
+   */
+  degraded?: boolean;
 }
 
 export interface TriggeredRule {

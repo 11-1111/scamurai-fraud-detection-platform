@@ -152,10 +152,13 @@ Tracked rather than hidden:
   and actor identity on an alert action is self-reported from the request
   body — so the alert audit trail records whatever the caller claimed. The
   largest outstanding gap by some distance.
-- **No graceful degradation.** A datastore being unavailable stops ingestion
-  rather than continuing on what still works. The graph outbox makes this
-  safe to change -- a deferred graph write is now recorded rather than lost
-  -- but the policy has not been changed yet.
+- **Degradation is per-dependency, and only the graph is covered.** Losing
+  Neo4j no longer stops ingestion: the write is owed in the outbox, the score
+  is computed from the relational features, and the alert records that it was
+  decided on partial evidence. Losing Redis still stops the scheduler, and
+  losing either SQL Server still stops everything -- which is correct for
+  FraudDb and arguably not for the upstream database, where a read-only
+  outage could be ridden out.
 - **The ingestion lock is per-database, not per-cluster.** A SQL Server
   application lock serialises runs against one `FraudDb`, which is what the
   deployment has. Two engines pointed at two databases would not see each

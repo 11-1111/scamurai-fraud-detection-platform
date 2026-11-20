@@ -164,6 +164,27 @@ reachability: every store can answer a ping while FraudDb and the graph
 steadily drift apart. It reports a backlog that has stopped moving, and
 writes that have exhausted their retries and need a person.
 
+### Degrading instead of failing
+
+Losing the identifier graph does not stop the platform. A Neo4j outage costs
+the network view and the relationship signals; everything else keeps working,
+because the relational features read `fraud_transactions` and related
+identifiers read `fraud_identifiers`.
+
+Concretely, while Neo4j is down:
+
+- ingestion **keeps running** — the graph write is owed in the outbox and
+  applied when Neo4j returns
+- transactions are still scored from their relational features
+- a graph read returns empty with `degraded: true` rather than throwing
+- any alert decided in that window carries a reason saying it was **decided
+  on partial evidence**
+
+That last point is the one that makes the rest safe. An empty network and an
+unavailable one are the same response shape and opposite conclusions, and an
+analyst reading "no connections found" as evidence of innocence during an
+outage is exactly the wrong inference.
+
 ### Metrics
 
 `GET /metrics` on the fraud engine serves the Prometheus text format: process

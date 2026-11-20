@@ -28,7 +28,26 @@ export interface EvaluateIdentifierOptions {
   createAlert?: boolean;
   rootIdentifier?: { type: string; value: string };
   sourceTransactionId?: string;
+  /**
+   * False when this transaction's own graph write did not land, so its node
+   * is missing from the network about to be read. Defaults to true; the
+   * graph's own `degraded` flag covers the case where the read itself failed.
+   */
+  graphAvailable?: boolean;
 }
+
+/*
+ * Prepended to an alert's reasons when the graph could not contribute.
+ *
+ * An empty network and an unavailable one are indistinguishable in the
+ * result, and an analyst reading "no connections found" as evidence of
+ * innocence is the exact wrong conclusion to draw from an outage. The score
+ * is still worth having -- every relational feature is intact -- but it must
+ * not be presented as a complete picture.
+ */
+export const DEGRADED_EVIDENCE_REASON =
+  'Decided on partial evidence: the identifier graph was unavailable, so ' +
+  'relationship signals did not contribute to this score.';
 
 @Injectable()
 export class FraudEvaluationService {
@@ -119,7 +138,27 @@ export class FraudEvaluationService {
       });
       this.logger.log(`policy decision=${policy.finalDecision}`);
 
-      const reasons = triggeredRules.map((rule) => rule.message);
+      /*
+       * Two different causes, one consequence: the graph could not be read,
+       * or this transaction's own write had not landed when the network was
+       * read. Either way the network was not whole.
+       */
+      const graphDegraded =
+        graph.degraded === true || options?.graphAvailable === false;
+
+      const reasons = graphDegraded
+        ? [
+            DEGRADED_EVIDENCE_REASON,
+            ...triggeredRules.map((rule) => rule.message),
+          ]
+        : triggeredRules.map((rule) => rule.message);
+
+      if (graphDegraded) {
+        this.logger.warn(
+          'Evaluated without the identifier graph; the alert records that it ' +
+            'was decided on partial evidence.',
+        );
+      }
 
       let alertCreated = false;
       if (
