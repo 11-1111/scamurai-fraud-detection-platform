@@ -163,5 +163,7 @@ Tracked rather than hidden:
   ordering signal rather than a probability. The configured risk bands are
   ranges on this scale, so recalibrating the two together is the only safe
   way to change it.
-- **No health or readiness endpoints**, so container healthchecks prove only
-  that a process is serving.
+- **No metrics, structured logging or request tracing.** Health endpoints
+  report the current state of each dependency, but nothing records how the
+  system behaved over time, so questions like "when did the outbox start
+  backing up" have no answer.
