@@ -284,14 +284,46 @@ export class IngestionService {
     /*
      * FraudDb has committed, and its commit included a record that the graph
      * owes a write. Applying it here keeps the graph current for the
-     * evaluation below; if this throws, the run stops and the cursor stays
-     * behind this transaction, and either the retry or the outbox drain
-     * applies it. The two stores can lag, but they cannot diverge.
+     * evaluation below.
+     *
+     * A failure no longer stops the run. The outbox entry survives the
+     * commit, so the write is owed whether or not this attempt succeeded,
+     * and the drain applies it when Neo4j returns -- which is what makes
+     * carrying on safe rather than merely convenient. Halting instead would
+     * stop ingestion entirely over a dependency most of a decision does not
+     * use, and the transactions it refused to read would still be waiting
+     * when the outage ended.
+     *
+     * The cost is that this transaction is scored without its own node in
+     * the graph. The evaluation records that, so the alert says it was
+     * decided on partial evidence instead of looking complete.
      */
-    await this.graphProjection.project(fraudTransaction);
-    await this.graphOutbox.markApplied(fraudTransaction.id);
+    const projected = await this.projectToGraph(fraudTransaction);
 
-    return this.evaluateAndCreateAlert(tx, fraudTransaction);
+    return this.evaluateAndCreateAlert(tx, fraudTransaction, {
+      graphAvailable: projected,
+    });
+  }
+
+  private async projectToGraph(
+    fraudTransaction: FraudTransactionEntity,
+  ): Promise<boolean> {
+    try {
+      await this.graphProjection.project(fraudTransaction);
+      await this.graphOutbox.markApplied(fraudTransaction.id);
+      return true;
+    } catch (error) {
+      this.metrics.recordGraphProjectionFailure();
+
+      this.logger.warn(
+        `Graph write deferred for transaction ${fraudTransaction.id}; the ` +
+          `outbox will retry it: ${
+            error instanceof Error ? error.message : String(error)
+          }`,
+      );
+
+      return false;
+    }
   }
 
   /*
@@ -426,6 +458,7 @@ export class IngestionService {
   private async evaluateAndCreateAlert(
     tx: SourceTransactionEntity,
     fraudTransaction: FraudTransactionEntity,
+    context: { graphAvailable: boolean },
   ): Promise<{ alertCreated: boolean }> {
     const rootIdentifier = this.detectRootIdentifier(tx);
     if (!rootIdentifier) {
@@ -444,6 +477,13 @@ export class IngestionService {
         createAlert: true,
         rootIdentifier,
         sourceTransactionId: tx.id,
+        /*
+         * The graph write for this transaction did not land, so its own node
+         * is missing from the network the evaluation is about to read. The
+         * score is still worth having -- every relational feature is intact
+         * -- but it must not be presented as a complete picture.
+         */
+        graphAvailable: context.graphAvailable,
       },
     );
 
