@@ -46,9 +46,14 @@ sequenceDiagram
     Cron->>Queue: enqueue poll (deterministic job id)
     Queue->>Ing: run poll
     Ing->>Src: rows newer than the watermark
+    rect rgb(240, 240, 240)
+    note over Ing,Fraud: one transaction
     Ing->>Fraud: upsert transaction
     Ing->>Fraud: insert identifiers
+    Ing->>Fraud: record the graph write in the outbox
+    end
     Ing->>Graph: MERGE transaction and identifier nodes
+    Ing->>Fraud: discharge the outbox entry
     Ing->>Fraud: evaluation: features, rules, score, policy
     Ing->>Fraud: alert, if the policy says so
     Ing->>Fraud: advance the watermark
@@ -58,6 +63,27 @@ The scheduler derives the job id from the source name rather than the clock,
 so several engine replicas enqueueing the same minute's poll produce one job
 rather than one each. That is what makes the engine horizontally scalable
 without a leader election.
+
+### Why the graph write goes through an outbox
+
+`FraudDb` and Neo4j cannot share a transaction, and writing to both in
+sequence means any failure between them leaves the two disagreeing with
+nothing recording that a write is owed.
+
+So the commit that makes a transaction visible also records, in the same
+transaction, that the graph owes a write. Ingestion then projects into the
+graph immediately and deletes its own outbox entry, which is the normal path.
+A drain worker picks up whatever is left -- the process dying between the
+commit and the projection, or Neo4j being unavailable when the transaction
+arrived -- with backoff, and parks a row that exhausts its attempts.
+
+The entry stores a transaction id and no payload. The drain rebuilds the
+write from `fraud_transactions`, so there is one source of truth for what a
+transaction is and a replayed entry can never write stale values. Every
+clause of the projection is a `MERGE`, so applying it twice is the same as
+applying it once.
+
+The two stores can lag. They cannot diverge.
 
 Scoring runs in stages, each replaceable on its own:
 
@@ -124,11 +150,18 @@ Tracked rather than hidden:
 
 - **No authentication anywhere in the stack.** Every endpoint is anonymous,
   and actor identity on an alert action is self-reported from the request
-  body. This is the first thing to fix after Tier 0.
-- **The ingestion watermark stores only a timestamp.** Rows sharing a
-  `CreatedAt` with the last row of a batch are skipped permanently. The
-  synthetic data generator plants that condition on purpose.
-- **Graph traversal is unbounded.** Variable-length match with no
-  relationship filter and `LIMIT` applied after path enumeration.
+  body — so the alert audit trail records whatever the caller claimed. The
+  largest outstanding gap by some distance.
+- **No graceful degradation.** A datastore being unavailable stops ingestion
+  rather than continuing on what still works. The graph outbox makes this
+  safe to change -- a deferred graph write is now recorded rather than lost
+  -- but the policy has not been changed yet.
+- **Manual sync has no distributed lock.** `POST /ingestion/sync` can run
+  concurrently with the scheduled poll, or with itself.
+- **The risk score is an additive model.** Rule impacts are not independent,
+  so two rules firing on the same behaviour count twice; the total is an
+  ordering signal rather than a probability. The configured risk bands are
+  ranges on this scale, so recalibrating the two together is the only safe
+  way to change it.
 - **No health or readiness endpoints**, so container healthchecks prove only
   that a process is serving.

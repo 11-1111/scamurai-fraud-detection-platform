@@ -12,6 +12,10 @@ import { FraudTransactionEntity } from '../database/entities/fraud-transaction.e
 import { FraudIdentifierEntity } from '../database/entities/fraud-identifier.entity';
 import { FraudIngestionStateEntity } from '../database/entities/fraud-ingestion-state.entity';
 import { FraudIngestionConfigEntity } from '../database/entities/fraud-ingestion-config.entity';
+import { FraudGraphOutboxEntity } from '../database/entities/fraud-graph-outbox.entity';
+import { GraphOutboxService } from './graph/graph-outbox.service';
+import { GraphOutboxWorker } from './graph/graph-outbox.worker';
+import { GraphProjectionService } from './graph/graph-projection.service';
 import { FraudModule } from '../fraud/fraud.module';
 import { Neo4jModule } from '../neo4j/neo4j.module';
 import { BullMqModule } from './queue/bullmq/bullmq.module';
@@ -26,6 +30,7 @@ import { BullMqModule } from './queue/bullmq/bullmq.module';
         FraudIdentifierEntity,
         FraudIngestionStateEntity,
         FraudIngestionConfigEntity,
+        FraudGraphOutboxEntity,
       ],
       'fraud',
     ),
@@ -35,6 +40,9 @@ import { BullMqModule } from './queue/bullmq/bullmq.module';
   controllers: [IngestionController],
   providers: [
     IngestionService,
+    GraphProjectionService,
+    GraphOutboxService,
+    GraphOutboxWorker,
     NestCronJobOrchestrator,
     {
       provide: JOB_ORCHESTRATOR,

@@ -125,9 +125,11 @@ function createService(
 ): { service: IngestionService; ingested: string[] } {
   const service = new IngestionService(
     sourceRepo as never,
-    {} as never,
-    {} as never,
     stateRepo as never,
+    // ingestTransaction is stubbed below, so nothing downstream of the
+    // cursor is exercised here.
+    {} as never,
+    {} as never,
     {} as never,
     {} as never,
   );

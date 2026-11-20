@@ -241,11 +241,56 @@ describe('NestCronJobOrchestrator', () => {
 });
 
 describe('Ingestion orchestration boundaries', () => {
-  it('registers exactly one @Cron decorator in src/ingestion', () => {
+  /*
+   * The point of this guard is that ingestion has exactly one scheduled
+   * entry point: two cron jobs enqueueing polls would double every batch.
+   * It originally counted every @Cron under src/ingestion, which conflated
+   * "one ingestion schedule" with "one timer in the folder" -- so the graph
+   * outbox drain, a different job entirely, broke it.
+   *
+   * Naming the owner of each schedule keeps the real constraint enforced:
+   * a second poller still fails, and a new schedule has to be declared here
+   * rather than appearing quietly.
+   */
+  it('gives each scheduled job in src/ingestion a declared owner', () => {
     const ingestionRoot = path.join(__dirname, '..');
-    const cronMatches = countPatternInDirectory(ingestionRoot, /@Cron\(/g);
 
-    expect(cronMatches).toBe(1);
+    const expectedSchedules: Record<string, number> = {
+      // The ingestion poll.
+      orchestration: 1,
+      // Draining graph writes FraudDb has committed to.
+      graph: 1,
+    };
+
+    const actual: Record<string, number> = {};
+
+    for (const entry of fs.readdirSync(ingestionRoot, {
+      withFileTypes: true,
+    })) {
+      const count = entry.isDirectory()
+        ? countPatternInDirectory(
+            path.join(ingestionRoot, entry.name),
+            /@Cron\(/g,
+          )
+        : 0;
+
+      if (count > 0) {
+        actual[entry.name] = count;
+      }
+    }
+
+    expect(actual).toEqual(expectedSchedules);
+  });
+
+  it('keeps the ingestion poll as the only schedule that enqueues a job', () => {
+    const ingestionRoot = path.join(__dirname, '..');
+    const enqueuers = findPatternInDirectory(
+      ingestionRoot,
+      /@Cron\([\s\S]*?enqueue\(/,
+    ).filter((filePath) => !filePath.endsWith('.spec.ts'));
+
+    expect(enqueuers).toHaveLength(1);
+    expect(enqueuers[0]).toContain('nest-cron-job-orchestrator');
   });
 
   it('IngestionService contains no scheduler or queue imports', () => {
