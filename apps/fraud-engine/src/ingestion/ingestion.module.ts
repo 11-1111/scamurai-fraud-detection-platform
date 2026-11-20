@@ -13,6 +13,7 @@ import { FraudIdentifierEntity } from '../database/entities/fraud-identifier.ent
 import { FraudIngestionStateEntity } from '../database/entities/fraud-ingestion-state.entity';
 import { FraudIngestionConfigEntity } from '../database/entities/fraud-ingestion-config.entity';
 import { FraudGraphOutboxEntity } from '../database/entities/fraud-graph-outbox.entity';
+import { MetricsModule } from '../observability/metrics.module';
 import { GraphOutboxService } from './graph/graph-outbox.service';
 import { GraphOutboxWorker } from './graph/graph-outbox.worker';
 import { GraphProjectionService } from './graph/graph-projection.service';
@@ -22,6 +23,7 @@ import { BullMqModule } from './queue/bullmq/bullmq.module';
 
 @Module({
   imports: [
+    MetricsModule,
     forwardRef(() => BullMqModule),
     TypeOrmModule.forFeature([SourceTransactionEntity], 'source'),
     TypeOrmModule.forFeature(

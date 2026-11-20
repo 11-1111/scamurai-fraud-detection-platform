@@ -2,6 +2,7 @@ import { QueryFailedError } from 'typeorm';
 
 import { SourceTransactionEntity } from '../database/entities/source-transaction.entity';
 import { FraudIngestionStateEntity } from '../database/entities/fraud-ingestion-state.entity';
+import { MetricsService } from '../observability/metrics.service';
 import { IngestionService } from './ingestion.service';
 import { TRANSACTIONS_INGESTION_SOURCE } from './ingestion.constants';
 
@@ -112,6 +113,8 @@ function buildHarness(identifierSaveResult: () => Promise<unknown>) {
     evaluateIdentifier: jest.fn(() => Promise.resolve({ alertCreated: true })),
   };
 
+  const metrics = new MetricsService();
+
   const service = new IngestionService(
     sourceRepo as never,
     ingestionStateRepo as never,
@@ -119,6 +122,7 @@ function buildHarness(identifierSaveResult: () => Promise<unknown>) {
     graphOutbox as never,
     graphProjection as never,
     fraudEvaluationService as never,
+    metrics,
   );
 
   return {
@@ -131,6 +135,7 @@ function buildHarness(identifierSaveResult: () => Promise<unknown>) {
     graphProjection,
     fraudEvaluationService,
     ingestionStateRepo,
+    metrics,
   };
 }
 

@@ -1,15 +1,18 @@
 import { FraudRuleConfigEntity } from '../../database/entities/fraud-rule-config.entity';
+import { MetricsService } from '../../observability/metrics.service';
 import { RulesEngine } from './rules.engine';
 
 describe('RulesEngine boolean comparisons', () => {
   let ruleConfigRepo: { find: jest.Mock };
   let engine: RulesEngine;
+  let metrics: MetricsService;
 
   beforeEach(() => {
     ruleConfigRepo = {
       find: jest.fn(),
     };
-    engine = new RulesEngine(ruleConfigRepo as never);
+    metrics = new MetricsService();
+    engine = new RulesEngine(ruleConfigRepo as never, metrics);
   });
 
   it('triggers when boolean feature equals true threshold (1)', async () => {

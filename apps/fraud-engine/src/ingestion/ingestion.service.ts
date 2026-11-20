@@ -16,6 +16,7 @@ import { FraudIdentifierEntity } from '../database/entities/fraud-identifier.ent
 import { FraudIngestionStateEntity } from '../database/entities/fraud-ingestion-state.entity';
 import { isDuplicateKeyError } from '../database/sql-server-errors';
 import { FraudEvaluationService } from '../fraud/fraud-evaluation.service';
+import { MetricsService } from '../observability/metrics.service';
 import { GraphOutboxService } from './graph/graph-outbox.service';
 import { GraphProjectionService } from './graph/graph-projection.service';
 import {
@@ -61,6 +62,7 @@ export class IngestionService {
     private readonly graphOutbox: GraphOutboxService,
     private readonly graphProjection: GraphProjectionService,
     private readonly fraudEvaluationService: FraudEvaluationService,
+    private readonly metrics: MetricsService,
   ) {}
 
   async runScheduledSync(): Promise<IngestionRunResult> {
@@ -73,6 +75,10 @@ export class IngestionService {
 
   async runIngestion(): Promise<IngestionRunResult> {
     this.logger.log('Starting fraud ingestion sync...');
+
+    const startedAt = process.hrtime.bigint();
+    const elapsedSeconds = () =>
+      Number(process.hrtime.bigint() - startedAt) / 1_000_000_000;
 
     const state = await this.getOrCreateState();
 
@@ -91,6 +97,19 @@ export class IngestionService {
 
     if (sourceTransactions.length === 0) {
       this.logger.log('No new transactions found.');
+
+      /*
+       * Still recorded. A run that finds nothing is the normal state, and
+       * counting it is what makes the ratio of empty to productive runs
+       * visible -- which is how you notice that polling has stopped finding
+       * work because the upstream feed stopped, rather than because fraud
+       * stopped.
+       */
+      this.metrics.recordIngestionRun('empty', elapsedSeconds(), {
+        transactions: 0,
+        alerts: 0,
+      });
+
       return {
         ingested: 0,
         message: 'No new transactions found',
@@ -133,6 +152,18 @@ export class IngestionService {
       : 0;
 
     this.logger.log(`Ingested ${ingested} transactions.`);
+
+    /*
+     * A run that stopped partway is not a successful run, and the difference
+     * matters more than the count: it means a transaction could not be
+     * processed and the cursor is parked behind it. Without the distinction,
+     * a steady stream of halted runs looks like healthy throughput.
+     */
+    this.metrics.recordIngestionRun(
+      ingested === sourceTransactions.length ? 'completed' : 'halted',
+      elapsedSeconds(),
+      { transactions: ingested, alerts: alertsCreated },
+    );
 
     return {
       ingested,

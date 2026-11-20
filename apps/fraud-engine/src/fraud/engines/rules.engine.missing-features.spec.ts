@@ -1,6 +1,7 @@
 import { Logger } from '@nestjs/common';
 
 import { FraudRuleConfigEntity } from '../../database/entities/fraud-rule-config.entity';
+import { MetricsService } from '../../observability/metrics.service';
 import { RulesEngine } from './rules.engine';
 
 /*
@@ -35,11 +36,13 @@ function rule(
 describe('RulesEngine with missing or unusable features', () => {
   let ruleConfigRepo: { find: jest.Mock };
   let engine: RulesEngine;
+  let metrics: MetricsService;
   let warn: jest.SpyInstance;
 
   beforeEach(() => {
     ruleConfigRepo = { find: jest.fn() };
-    engine = new RulesEngine(ruleConfigRepo as never);
+    metrics = new MetricsService();
+    engine = new RulesEngine(ruleConfigRepo as never, metrics);
     warn = jest.spyOn(Logger.prototype, 'warn').mockImplementation(() => {});
   });
 
@@ -92,6 +95,42 @@ describe('RulesEngine with missing or unusable features', () => {
     expect(warn).toHaveBeenCalledWith(
       expect.stringContaining('featureNobodyComputed'),
     );
+  });
+
+  it('counts every skip even though it warns only once', async () => {
+    ruleConfigRepo.find.mockResolvedValue([
+      rule({ ruleCode: 'RENAMED', featureName: 'featureNobodyComputed' }),
+    ]);
+
+    for (let run = 0; run < 5; run += 1) {
+      await engine.evaluate({ deviceDistinctCardsLast1Hour: 1 });
+    }
+
+    /*
+     * The log is emitted once and the counter every time, on purpose. The log
+     * says what is wrong and only helps if somebody reads it; the counter
+     * says it is still happening, which is how a rule dead since a deploy
+     * gets noticed at all.
+     */
+    expect(warn).toHaveBeenCalledTimes(1);
+    expect(await metrics.metrics()).toContain(
+      'scamurai_rules_unevaluable_total{rule_code="RENAMED",reason="missing_feature"} 5',
+    );
+  });
+
+  it('labels the skip with why it could not be evaluated', async () => {
+    ruleConfigRepo.find.mockResolvedValue([
+      rule({
+        ruleCode: 'BAD_OPERATOR',
+        featureName: 'orderTrackingIdSuccessExists',
+        operator: '>',
+        thresholdValue: 0,
+      }),
+    ]);
+
+    await engine.evaluate({ orderTrackingIdSuccessExists: true });
+
+    expect(await metrics.metrics()).toContain('reason="bad_operator"');
   });
 
   it('warns once per problem, not once per transaction', async () => {

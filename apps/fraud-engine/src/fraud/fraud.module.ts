@@ -21,12 +21,14 @@ import { RelationshipEngine } from './engines/relationship.engine';
 import { RiskClassificationEngine } from './engines/risk-classification.engine';
 import { RiskScoreEngine } from './engines/risk-score.engine';
 import { RulesEngine } from './engines/rules.engine';
+import { MetricsModule } from '../observability/metrics.module';
 import { FraudConfigService } from './fraud-config.service';
 import { FraudEvaluationService } from './fraud-evaluation.service';
 import { FraudService } from './fraud.service';
 
 @Module({
   imports: [
+    MetricsModule,
     TypeOrmModule.forFeature(
       [
         FraudIdentifierEntity,
