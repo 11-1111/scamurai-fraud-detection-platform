@@ -35,9 +35,9 @@ USER node
 
 EXPOSE 3000
 
-# The BFF answers GET / from its app controller, so this check is a genuine
-# request through the stack rather than a port probe.
+# Liveness rather than readiness, so a fraud engine that is briefly
+# unreachable does not get this container restarted on top of it.
 HEALTHCHECK --interval=15s --timeout=5s --start-period=30s --retries=5 \
-  CMD node -e "require('http').get('http://127.0.0.1:'+process.env.PORT+'/', r => process.exit(r.statusCode < 500 ? 0 : 1)).on('error', () => process.exit(1))"
+  CMD node -e "require('http').get('http://127.0.0.1:'+process.env.PORT+'/health/live', r => process.exit(r.statusCode === 200 ? 0 : 1)).on('error', () => process.exit(1))"
 
 CMD ["node", "apps/bff/dist/main.js"]

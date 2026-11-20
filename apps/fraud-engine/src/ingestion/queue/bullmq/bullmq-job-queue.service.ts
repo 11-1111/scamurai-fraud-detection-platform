@@ -1,7 +1,7 @@
 import { Inject, Injectable, OnModuleDestroy } from '@nestjs/common';
 import { Queue, QueueEvents } from 'bullmq';
 import type { BullMqRedisConfig } from './bullmq.config';
-import type { JobQueue } from '../job-queue.interface';
+import type { JobQueue, JobQueueBrokerStatus } from '../job-queue.interface';
 import type { JobQueueJob } from '../job-queue-job';
 import type { JobEnqueueOptions } from '../job-queue-options';
 import type { ScheduledJobOptions } from '../job-schedule-options';
@@ -12,6 +12,7 @@ import type {
   JobQueueName,
 } from '../job-queue.types';
 import { BULLMQ_CONNECTION } from './bullmq.constants';
+import { readInfoField } from './redis-info';
 import {
   mapBullMqJobToJobQueueJob,
   mapEnqueueOptionsToBullMq,
@@ -98,6 +99,40 @@ export class BullMqJobQueue implements JobQueue, OnModuleDestroy {
 
     await bullJob.remove();
     return true;
+  }
+
+  /*
+   * Round-trip Redis through the queue's own connection.
+   *
+   * Reusing that connection is the point: a probe that dials its own socket
+   * can report a broker the application cannot actually reach -- different
+   * pool, different credentials, different answer.
+   *
+   * INFO rather than PING because both prove the round trip while INFO also
+   * carries the version and role, which is what you want on hand when a
+   * queue starts misbehaving.
+   */
+  async probe(queueName: JobQueueName): Promise<JobQueueBrokerStatus> {
+    const startedAt = Date.now();
+
+    try {
+      const client = await this.getQueue(queueName).client;
+      const info = await client.info();
+
+      return {
+        reachable: true,
+        responseTimeMs: Date.now() - startedAt,
+        version: readInfoField(info, 'redis_version'),
+        role: readInfoField(info, 'role'),
+      };
+    } catch (error) {
+      // Resolved, not rejected: an unreachable broker is an answer.
+      return {
+        reachable: false,
+        responseTimeMs: Date.now() - startedAt,
+        message: error instanceof Error ? error.message : String(error),
+      };
+    }
   }
 
   async onModuleDestroy(): Promise<void> {

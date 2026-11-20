@@ -6,6 +6,7 @@ import { TransactionsModule } from './transactions/transactions.module';
 import { FraudConfigModule } from './fraud-config/fraud-config.module';
 import { FraudAlertsModule } from './fraud-alerts/fraud-alerts.module';
 import { FraudIngestionModule } from './fraud-ingestion/fraud-ingestion.module';
+import { HealthModule } from './health/health.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { FraudIngestionModule } from './fraud-ingestion/fraud-ingestion.module';
     FraudConfigModule,
     FraudAlertsModule,
     FraudIngestionModule,
+    HealthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

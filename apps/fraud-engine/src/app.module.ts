@@ -26,6 +26,7 @@ import { BullMqModule } from './ingestion/queue/bullmq/bullmq.module';
 import { FraudModule } from './fraud/fraud.module';
 import { FraudAlertsModule } from './fraud-alerts/fraud-alerts.module';
 import { FraudEvaluationModule } from './fraud-evaluation/fraud-evaluation.module';
+import { HealthModule } from './health/health.module';
 
 function parseSqlServerPort(portKey: string, portValue: string): number {
   const parsed = Number(portValue);
@@ -190,6 +191,7 @@ function createSqlServerConnection(
     FraudModule,
     FraudAlertsModule,
     FraudEvaluationModule,
+    HealthModule,
   ],
 })
 export class AppModule {}

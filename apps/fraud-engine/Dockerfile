@@ -60,11 +60,11 @@ USER node
 
 EXPOSE 4000
 
-# The service has no health endpoint yet, so this proves only that the
-# process is listening and serving. It gets replaced by a real readiness
-# check -- one that reports on SQL Server, Redis and Neo4j -- when
-# @nestjs/terminus lands.
+# Liveness, not readiness. Readiness folds in SQL Server, Redis and Neo4j,
+# and a container healthcheck that fails when a dependency is down gets the
+# container restarted, which makes an outage longer rather than shorter.
+# Readiness is for whatever routes traffic; this is for the supervisor.
 HEALTHCHECK --interval=15s --timeout=5s --start-period=40s --retries=5 \
-  CMD node -e "require('http').get('http://127.0.0.1:'+process.env.PORT+'/', r => process.exit(r.statusCode < 500 ? 0 : 1)).on('error', () => process.exit(1))"
+  CMD node -e "require('http').get('http://127.0.0.1:'+process.env.PORT+'/health/live', r => process.exit(r.statusCode === 200 ? 0 : 1)).on('error', () => process.exit(1))"
 
 CMD ["node", "apps/fraud-engine/dist/main.js"]

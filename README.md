@@ -33,6 +33,8 @@ Then open **http://localhost:8080**.
 | Fraud engine | http://localhost:4000 |
 | Transactions API | http://localhost:5289/api/transactions/search?page=1&pageSize=25 |
 | Neo4j browser | http://localhost:7474 |
+| Engine readiness | http://localhost:4000/health/ready |
+| BFF readiness | http://localhost:3000/health/ready |
 
 `npm run up` does the same without the synthetic data. `npm run down` stops
 the stack; `npm run down:clean` also discards the volumes.
@@ -81,6 +83,57 @@ infra/
 docs/
   architecture/       diagrams, data flow, design decisions
 ```
+
+## Health and observability
+
+Both NestJS services expose two probes, which answer different questions:
+
+| Endpoint | Question | Action on failure |
+|---|---|---|
+| `GET /health/live` | Is this process working? | Restart it |
+| `GET /health/ready` | Can it do its job right now? | Stop sending it work |
+
+Liveness checks nothing external on purpose. A database outage is not a
+reason to kill a healthy process, and a liveness probe that fails during one
+turns a dependency outage into a restart loop that makes recovery slower. The
+container healthchecks therefore use liveness; readiness is for whatever
+routes traffic.
+
+Readiness reports each dependency separately, and which ones may fail it is a
+judgement about what the engine is for rather than a formality:
+
+| Dependency | On failure | Why |
+|---|---|---|
+| `fraudDb` | **down** | every endpoint reads it, so there is nothing to serve |
+| `sourceDb` | degraded | only ingestion reads it; alerts still serve |
+| `jobQueue` | degraded | only polls need it; reads still serve |
+| `neo4j` | degraded | costs network views; the outbox keeps the writes |
+| `graphOutbox` | degraded | reports drift between FraudDb and the graph |
+
+A degraded dependency keeps the response at 200, so the service stays in
+rotation while stating plainly what it cannot currently do. For example, with
+Neo4j stopped:
+
+```json
+{
+  "status": "degraded",
+  "details": {
+    "fraudDb": { "status": "up" },
+    "neo4j": {
+      "status": "degraded",
+      "impact": "network views and relationship features are unavailable"
+    },
+    "graphOutbox": { "status": "up", "pending": 3 }
+  }
+}
+```
+
+`graphOutbox` is the one indicator about correctness rather than
+reachability: every store can answer a ping while FraudDb and the graph
+steadily drift apart. It reports a backlog that has stopped moving, and
+writes that have exhausted their retries and need a person.
+
+Still missing, and tracked: metrics, structured logging and request tracing.
 
 ## Databases and migrations
 
