@@ -1,3 +1,4 @@
+import { MetricsService } from '../observability/metrics.service';
 import { IngestionService } from './ingestion.service';
 
 describe('IngestionService entry points', () => {
@@ -12,6 +13,7 @@ describe('IngestionService entry points', () => {
       {} as never,
       {} as never,
       {} as never,
+      new MetricsService(),
     );
 
     runIngestionMock = jest.fn().mockResolvedValue({

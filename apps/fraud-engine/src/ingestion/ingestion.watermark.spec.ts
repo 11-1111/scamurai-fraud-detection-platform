@@ -2,6 +2,7 @@ import { Equal, FindOperator, MoreThan, MoreThanOrEqual } from 'typeorm';
 
 import { SourceTransactionEntity } from '../database/entities/source-transaction.entity';
 import { FraudIngestionStateEntity } from '../database/entities/fraud-ingestion-state.entity';
+import { MetricsService } from '../observability/metrics.service';
 import { IngestionService } from './ingestion.service';
 import {
   INGESTION_BATCH_SIZE,
@@ -122,7 +123,8 @@ function createFakeStateRepo(initial?: Partial<FraudIngestionStateEntity>) {
 function createService(
   sourceRepo: unknown,
   stateRepo: unknown,
-): { service: IngestionService; ingested: string[] } {
+): { service: IngestionService; ingested: string[]; metrics: MetricsService } {
+  const metrics = new MetricsService();
   const service = new IngestionService(
     sourceRepo as never,
     stateRepo as never,
@@ -132,6 +134,7 @@ function createService(
     {} as never,
     {} as never,
     {} as never,
+    metrics,
   );
 
   const ingested: string[] = [];
@@ -149,7 +152,7 @@ function createService(
       return Promise.resolve({ alertCreated: false });
     });
 
-  return { service, ingested };
+  return { service, ingested, metrics };
 }
 
 /*
@@ -210,6 +213,60 @@ describe('IngestionService cursor', () => {
     expect(new Set(ingested).size).toBe(ingested.length);
     expect(ingested).toHaveLength(total);
     expect(ingested).toEqual(rows.map((row) => row.id));
+  });
+
+  it('distinguishes a halted run from a completed one', async () => {
+    const base = Date.UTC(2026, 10, 1, 0, 0, 0);
+    const rows: FakeRow[] = [
+      { id: 'tx-a', createdAt: new Date(base) },
+      { id: 'tx-b', createdAt: new Date(base + 1_000) },
+    ];
+
+    const sourceRepo = createFakeSourceRepo(rows);
+    const { repo: stateRepo } = createFakeStateRepo();
+    const { service, metrics } = createService(sourceRepo, stateRepo);
+
+    jest
+      .spyOn(
+        service as unknown as {
+          ingestTransaction: (
+            tx: FakeRow,
+          ) => Promise<{ alertCreated: boolean }>;
+        },
+        'ingestTransaction',
+      )
+      .mockImplementation((tx: FakeRow) =>
+        tx.id === 'tx-b'
+          ? Promise.reject(new Error('neo4j unavailable'))
+          : Promise.resolve({ alertCreated: false }),
+      );
+
+    await service.runIngestion();
+
+    /*
+     * A run that stops partway is not throughput. Without the distinction a
+     * steady stream of halted runs reads as a healthy pipeline while the
+     * cursor sits parked behind one transaction.
+     */
+    const scrape = await metrics.metrics();
+    expect(scrape).toContain(
+      'scamurai_ingestion_runs_total{outcome="halted"} 1',
+    );
+    expect(scrape).not.toContain('outcome="completed"');
+  });
+
+  it('records a run that found nothing', async () => {
+    const sourceRepo = createFakeSourceRepo([]);
+    const { repo: stateRepo } = createFakeStateRepo();
+    const { service, metrics } = createService(sourceRepo, stateRepo);
+
+    await service.runIngestion();
+
+    // Counting empty runs is how you notice polling stopped finding work
+    // because the upstream feed stopped, not because fraud stopped.
+    expect(await metrics.metrics()).toContain(
+      'scamurai_ingestion_runs_total{outcome="empty"} 1',
+    );
   });
 
   it('resumes after a known position, not after a point in time', async () => {
