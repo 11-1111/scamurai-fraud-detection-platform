@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { ScheduleModule } from '@nestjs/schedule';
@@ -28,6 +28,7 @@ import { FraudAlertsModule } from './fraud-alerts/fraud-alerts.module';
 import { FraudEvaluationModule } from './fraud-evaluation/fraud-evaluation.module';
 import { HealthModule } from './health/health.module';
 import { MetricsModule } from './observability/metrics.module';
+import { CorrelationIdMiddleware } from './observability/correlation-id.middleware';
 
 function parseSqlServerPort(portKey: string, portValue: string): number {
   const parsed = Number(portValue);
@@ -196,4 +197,13 @@ function createSqlServerConnection(
     MetricsModule,
   ],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  /*
+   * Applied to every route, including /health and /metrics. A probe that
+   * times out is worth correlating too, and excluding paths here would mean
+   * the requests least likely to be noticed are also the least traceable.
+   */
+  configure(consumer: MiddlewareConsumer): void {
+    consumer.apply(CorrelationIdMiddleware).forRoutes('*');
+  }
+}

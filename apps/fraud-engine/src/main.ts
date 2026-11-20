@@ -3,9 +3,17 @@ import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 import { AppModule } from './app.module';
+import { createLogger } from './observability/json-logger.service';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  /*
+   * The logger is passed at creation rather than set afterwards, so the
+   * framework's own startup lines are structured too -- otherwise the first
+   * thing a log aggregator sees from a new deployment is unparseable.
+   */
+  const app = await NestFactory.create(AppModule, {
+    logger: createLogger('fraud-engine'),
+  });
   const logger = new Logger('Bootstrap');
 
   app.enableCors();

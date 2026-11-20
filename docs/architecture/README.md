@@ -163,7 +163,11 @@ Tracked rather than hidden:
   ordering signal rather than a probability. The configured risk bands are
   ranges on this scale, so recalibrating the two together is the only safe
   way to change it.
-- **No metrics, structured logging or request tracing.** Health endpoints
-  report the current state of each dependency, but nothing records how the
-  system behaved over time, so questions like "when did the outbox start
-  backing up" have no answer.
+- **Nothing collects or ships the signals.** The engine exposes Prometheus
+  metrics and both services write correlated JSON logs, but the compose stack
+  has no Prometheus, Grafana or log aggregator, so the data is only as useful
+  as whatever happens to be scraping it.
+- **No distributed tracing.** A correlation id joins log lines across
+  services, which answers "what happened to this request". It does not give
+  spans or timings per hop, so "which call was slow" still means comparing
+  timestamps by hand.

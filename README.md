@@ -133,7 +133,45 @@ reachability: every store can answer a ping while FraudDb and the graph
 steadily drift apart. It reports a backlog that has stopped moving, and
 writes that have exhausted their retries and need a person.
 
-Still missing, and tracked: metrics, structured logging and request tracing.
+### Metrics
+
+`GET /metrics` on the fraud engine serves the Prometheus text format: process
+metrics, HTTP request durations, ingestion run outcomes and durations, alert
+counts, unevaluable-rule counts, and graph-outbox depth read at scrape time.
+
+It is deliberately unauthenticated and deliberately not proxied — the Apache
+vhost routes the dashboard and the BFF and nothing else, so it is reachable
+only from inside the deployment, which is where a scraper lives.
+
+Two labelling rules are worth knowing if you add a metric: HTTP requests are
+labelled by route *pattern*, never URL, and categorical labels come from a
+bounded set. An unbounded label value creates a new time series per value,
+which is how a Prometheus server gets taken down.
+
+### Logs and request correlation
+
+Both services write one JSON object per line. Every line inside a request
+carries that request's `correlationId`, and the id is echoed on the response
+in `x-correlation-id`, so a user report turns into a single value to filter
+on.
+
+The BFF mints the id and forwards it to the engine, so one dashboard request
+and the ingestion work it triggered share a trace. An inbound
+`x-correlation-id` or `x-request-id` is honoured if it looks like an id —
+header values are attacker-controlled, and a newline in one would let a
+caller forge log entries.
+
+```bash
+LOG_LEVEL=debug   # verbose | debug | log | warn | error | fatal
+LOG_FORMAT=text   # human-readable output for local work
+```
+
+Known-sensitive keys (`password`, `token`, `authorization`, `apiKey`, …) are
+redacted from structured log data at any depth.
+
+Still missing, and tracked: distributed tracing with spans across services,
+and shipping these signals anywhere — there is no Prometheus, Grafana or log
+aggregator in the compose stack yet.
 
 ## Databases and migrations
 
