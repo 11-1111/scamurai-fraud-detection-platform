@@ -156,8 +156,11 @@ Tracked rather than hidden:
   rather than continuing on what still works. The graph outbox makes this
   safe to change -- a deferred graph write is now recorded rather than lost
   -- but the policy has not been changed yet.
-- **Manual sync has no distributed lock.** `POST /ingestion/sync` can run
-  concurrently with the scheduled poll, or with itself.
+- **The ingestion lock is per-database, not per-cluster.** A SQL Server
+  application lock serialises runs against one `FraudDb`, which is what the
+  deployment has. Two engines pointed at two databases would not see each
+  other's lock -- that is not a configuration this supports, but nothing
+  stops someone trying it.
 - **The risk score is an additive model.** Rule impacts are not independent,
   so two rules firing on the same behaviour count twice; the total is an
   ordering signal rather than a probability. The configured risk bands are

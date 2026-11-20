@@ -84,6 +84,37 @@ docs/
   architecture/       diagrams, data flow, design decisions
 ```
 
+## Idempotency
+
+Every write on the ingestion path is idempotent by construction, so a
+repeated or retried run converges on the same state rather than duplicating
+work:
+
+| Write | What makes it repeatable |
+|---|---|
+| Transaction row | upserted by primary key |
+| Identifiers | unique index on `(transaction_id, identifier_type, identifier_value)`, and a duplicate-key violation is treated as "already present" |
+| Graph nodes and edges | every clause of the projection is a `MERGE` |
+| Graph outbox entry | `MERGE` on `transaction_id`, so a re-read transaction cannot queue the same write twice |
+| Ingestion cursor | advances only past transactions that were ingested, so a failed run resumes rather than skips |
+
+Those add up to the property a caller cares about: **`POST /ingestion/sync`
+is safe to retry.** A second call over rows already seen ingests nothing, and
+a call after a failure re-processes at most the batch that was in flight.
+Both are asserted in `ingestion.watermark.spec.ts` rather than left implied.
+
+Concurrency is handled separately from retries. Only one run happens at a
+time, enforced by a SQL Server application lock held for the duration of the
+run; a request arriving while a run is in progress returns immediately with
+`skipped: true` instead of queueing behind it. That distinction matters in the
+response — a skipped run and a run that found nothing both report zero
+ingested and mean entirely different things.
+
+The lock lives in `FraudDb` rather than Redis deliberately. Redis is a
+degraded-tolerant dependency here: ingestion is expected to keep working
+without it, so putting a correctness lock there would quietly make it
+required.
+
 ## Health and observability
 
 Both NestJS services expose two probes, which answer different questions:
